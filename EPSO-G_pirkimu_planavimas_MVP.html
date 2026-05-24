@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EPSO-G grupės pirkimų planavimo įrankis · MVP</title>
+<title>EPSO-G grupės pirkimų planavimo įrankis · MVP v1.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,257 +11,107 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{
-  --smaragdas:#00a072;
-  --smaragdas-120:#128a76;
-  --smaragdas-50:#16c492;
-  --smaragdas-30:#58d99b;
-  --smaragdas-15:#9af7be;
-  --smaragdas-5:#cdffdb;
-  --grafitas:#2e3641;
-  --grafitas-50:#737483;
-  --grafitas-30:#c7cdd3;
-  --grafitas-15:#e1e2e4;
-  --grafitas-5:#eff1f1;
-  --melyna:#00667d;
-  --raudona:#DB354A;
-  --geltona:#fab03b;
-  --zalia-15:#d7eedb;
-  --zalia-50:#72b67d;
-  --bg:#f6f8f7;
-  --white:#fff;
-  --shadow:0 2px 12px rgba(46,54,65,.06);
-  --shadow-lg:0 8px 32px rgba(46,54,65,.10);
-  --radius:14px;
+  --smaragdas:#00a072;--smaragdas-120:#128a76;--smaragdas-50:#16c492;--smaragdas-30:#58d99b;--smaragdas-15:#9af7be;--smaragdas-5:#cdffdb;
+  --grafitas:#2e3641;--grafitas-50:#737483;--grafitas-30:#c7cdd3;--grafitas-15:#e1e2e4;--grafitas-5:#eff1f1;
+  --melyna:#00667d;--raudona:#DB354A;--geltona:#fab03b;--zalia-15:#d7eedb;--zalia-50:#72b67d;
+  --bg:#f6f8f7;--white:#fff;--shadow:0 2px 12px rgba(46,54,65,.06);--shadow-lg:0 8px 32px rgba(46,54,65,.10);--radius:14px;
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family:"Nunito Sans","Arial",sans-serif;
-  color:var(--grafitas);
-  background:var(--bg);
-  font-size:14px;
-  line-height:1.45;
-  -webkit-font-smoothing:antialiased;
-}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{font-family:"Nunito Sans","Arial",sans-serif;color:var(--grafitas);background:var(--bg);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font-family:inherit;font-size:14px;color:inherit}
-
-/* HEADER */
-.app-header{
-  background:linear-gradient(96deg,var(--grafitas) 0%,#0F5265 60%,var(--smaragdas-120) 100%);
-  color:#fff; padding:18px 28px;
-  display:flex; align-items:center; gap:18px;
-  position:sticky; top:0; z-index:50;
-  box-shadow:var(--shadow);
-}
+.app-header{background:linear-gradient(96deg,var(--grafitas) 0%,#0F5265 60%,var(--smaragdas-120) 100%);color:#fff;padding:18px 28px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
 .app-header h1{margin:0;font-size:18px;font-weight:700;letter-spacing:.2px}
 .app-header h1 small{display:block;font-weight:400;font-size:11px;opacity:.85;letter-spacing:.6px;text-transform:uppercase}
-.brand-mark{
-  width:40px;height:40px;border-radius:10px;
-  background:#fff;display:flex;align-items:center;justify-content:center;
-  font-weight:800;color:var(--smaragdas);letter-spacing:-.5px;font-size:14px;
-}
+.brand-mark{width:40px;height:40px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--smaragdas);letter-spacing:-.5px;font-size:14px}
 .brand-spacer{flex:1}
-.company-pill{
-  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
-  padding:8px 14px; border-radius:20px; color:#fff;
-  font-size:12px; font-weight:600;
-}
-.company-pill select{
-  background:transparent;color:#fff;border:0;outline:0;font-weight:700;cursor:pointer;
-}
+.company-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:8px 14px;border-radius:20px;color:#fff;font-size:12px;font-weight:600}
+.company-pill select{background:transparent;color:#fff;border:0;outline:0;font-weight:700;cursor:pointer}
 .company-pill select option{color:var(--grafitas)}
-
-/* TABS */
-.tabs{
-  display:flex; gap:2px; background:#fff;
-  padding:0 28px; border-bottom:1px solid var(--grafitas-15);
-  position:sticky; top:76px; z-index:40;
-  overflow-x:auto;
-}
-.tab{
-  padding:14px 18px; cursor:pointer; font-size:13px; font-weight:600;
-  color:var(--grafitas-50); border-bottom:3px solid transparent;
-  white-space:nowrap;
-  transition:.15s all;
-}
+.tabs{display:flex;gap:2px;background:#fff;padding:0 28px;border-bottom:1px solid var(--grafitas-15);position:sticky;top:76px;z-index:40;overflow-x:auto}
+.tab{padding:14px 18px;cursor:pointer;font-size:13px;font-weight:600;color:var(--grafitas-50);border-bottom:3px solid transparent;white-space:nowrap;transition:.15s all}
 .tab:hover{color:var(--grafitas)}
-.tab.active{
-  color:var(--smaragdas); border-bottom-color:var(--smaragdas);
-  background:linear-gradient(180deg,transparent,var(--smaragdas-5));
-}
+.tab.active{color:var(--smaragdas);border-bottom-color:var(--smaragdas);background:linear-gradient(180deg,transparent,var(--smaragdas-5))}
 .tab-icon{display:inline-block;margin-right:6px;font-size:15px}
-
-/* MAIN */
 main{padding:24px 28px 80px;max-width:1500px;margin:0 auto}
 .section{display:none}
 .section.active{display:block;animation:fade .2s ease}
 @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
 h2{font-size:22px;font-weight:700;margin:8px 0 4px;color:var(--grafitas)}
 h2 .h2-sub{display:block;font-size:13px;font-weight:400;color:var(--grafitas-50);margin-top:2px}
 h3{font-size:15px;font-weight:700;color:var(--smaragdas);margin:18px 0 8px}
 h4{font-size:13px;font-weight:700;color:var(--grafitas);margin:12px 0 6px}
-
-/* CARDS */
-.card{
-  background:#fff; border-radius:var(--radius); padding:20px 22px;
-  box-shadow:var(--shadow); margin-bottom:16px;
-  border:1px solid var(--grafitas-15);
-}
+.card{background:#fff;border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);margin-bottom:16px;border:1px solid var(--grafitas-15)}
 .card.flat{box-shadow:none;background:var(--smaragdas-5);border-color:var(--smaragdas-15)}
 .grid{display:grid;gap:14px}
 .grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 .grid-4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-
-/* KPI */
-.kpi{
-  background:#fff;border-radius:12px;padding:16px 18px;
-  border:1px solid var(--grafitas-15);
-  display:flex;flex-direction:column;gap:4px;
-  position:relative;overflow:hidden;
-}
-.kpi::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--smaragdas);
-}
-.kpi.warn::before{background:var(--geltona)}
-.kpi.bad::before{background:var(--raudona)}
-.kpi.cool::before{background:var(--melyna)}
+.kpi{background:#fff;border-radius:12px;padding:16px 18px;border:1px solid var(--grafitas-15);display:flex;flex-direction:column;gap:4px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--smaragdas)}
+.kpi.warn::before{background:var(--geltona)}.kpi.bad::before{background:var(--raudona)}.kpi.cool::before{background:var(--melyna)}
 .kpi-label{font-size:11px;color:var(--grafitas-50);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
 .kpi-value{font-size:26px;font-weight:800;color:var(--grafitas);line-height:1.1}
 .kpi-sub{font-size:11px;color:var(--grafitas-50)}
-
-/* BUTTONS */
-.btn{
-  background:var(--smaragdas); color:#fff; border:0; padding:10px 18px;
-  border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;
-  display:inline-flex; align-items:center; gap:8px;
-  transition:.15s; box-shadow:0 1px 3px rgba(0,160,114,.25);
-}
+.btn{background:var(--smaragdas);color:#fff;border:0;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:8px;transition:.15s;box-shadow:0 1px 3px rgba(0,160,114,.25)}
 .btn:hover{background:var(--smaragdas-120);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,160,114,.3)}
 .btn.secondary{background:#fff;color:var(--grafitas);border:1px solid var(--grafitas-30);box-shadow:none}
 .btn.secondary:hover{background:var(--grafitas-5);border-color:var(--grafitas-50)}
 .btn.ghost{background:transparent;color:var(--smaragdas);box-shadow:none}
 .btn.ghost:hover{background:var(--smaragdas-5)}
-.btn.danger{background:var(--raudona)}
-.btn.danger:hover{background:#b3293c}
+.btn.danger{background:var(--raudona)}.btn.danger:hover{background:#b3293c}
 .btn.sm{padding:6px 12px;font-size:12px}
 .btn.lg{padding:14px 26px;font-size:15px}
-
-/* TABLE */
 .table-wrap{overflow:auto;border:1px solid var(--grafitas-15);border-radius:10px;background:#fff;max-height:70vh}
 table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1100px}
-thead th{
-  background:var(--zalia-15);color:var(--grafitas);font-weight:700;
-  text-align:left;padding:10px 12px;border-bottom:2px solid var(--smaragdas);
-  position:sticky;top:0;z-index:1;font-size:11.5px;
-}
+thead th{background:var(--zalia-15);color:var(--grafitas);font-weight:700;text-align:left;padding:10px 12px;border-bottom:2px solid var(--smaragdas);position:sticky;top:0;z-index:1;font-size:11.5px}
 tbody td{padding:9px 12px;border-bottom:1px solid var(--grafitas-15);vertical-align:top}
 tbody tr:hover{background:var(--smaragdas-5)}
-tbody tr.flagged{background:#fef5e7}
-tbody tr.flagged:hover{background:#fde7c8}
-tbody tr.error{background:#fbe6ea}
-tbody tr.error:hover{background:#f8d3d9}
-
-.badge{
-  display:inline-block;padding:3px 10px;border-radius:14px;
-  font-size:11px;font-weight:700;line-height:1;
-  background:var(--grafitas-15);color:var(--grafitas);
-}
+tbody tr.flagged{background:#fef5e7}tbody tr.flagged:hover{background:#fde7c8}
+tbody tr.error{background:#fbe6ea}tbody tr.error:hover{background:#f8d3d9}
+.badge{display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700;line-height:1;background:var(--grafitas-15);color:var(--grafitas)}
 .badge.green{background:var(--smaragdas-15);color:var(--smaragdas-120)}
 .badge.blue{background:#bee0e5;color:var(--melyna)}
 .badge.yellow{background:#fde7c8;color:#a35c00}
 .badge.red{background:#fbe6ea;color:#9b1d2e}
 .badge.gray{background:var(--grafitas-15);color:var(--grafitas)}
-.badge.purple{background:#e8d8f5;color:#6c2bc4}
-
-/* FORM */
 .form-row{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:12px}
 label{display:block;font-size:12px;font-weight:600;color:var(--grafitas);margin-bottom:4px}
-input[type="text"],input[type="number"],input[type="date"],select,textarea{
-  width:100%;padding:9px 11px;border:1px solid var(--grafitas-30);
-  border-radius:7px;background:#fff;outline:0;transition:.15s;
-}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;padding:9px 11px;border:1px solid var(--grafitas-30);border-radius:7px;background:#fff;outline:0;transition:.15s}
 input:focus,select:focus,textarea:focus{border-color:var(--smaragdas);box-shadow:0 0 0 3px rgba(0,160,114,.1)}
 textarea{min-height:60px;resize:vertical}
-
-/* DROPZONE */
-.dropzone{
-  border:2px dashed var(--smaragdas-30); padding:48px;
-  text-align:center; border-radius:14px;
-  background:linear-gradient(135deg,var(--smaragdas-5),#fff);
-  cursor:pointer; transition:.2s;
-}
-.dropzone:hover,.dropzone.drag{
-  border-color:var(--smaragdas);background:var(--smaragdas-15);
-}
+.dropzone{border:2px dashed var(--smaragdas-30);padding:48px;text-align:center;border-radius:14px;background:linear-gradient(135deg,var(--smaragdas-5),#fff);cursor:pointer;transition:.2s}
+.dropzone:hover,.dropzone.drag{border-color:var(--smaragdas);background:var(--smaragdas-15)}
 .dropzone .icon{font-size:48px;color:var(--smaragdas);margin-bottom:8px}
 .dropzone p{margin:6px 0}
 .dropzone strong{color:var(--smaragdas);font-size:16px}
-
-/* TIMELINE */
-.timeline{
-  display:grid;grid-template-columns:120px 80px 1fr 100px;gap:8px 14px;
-  padding:14px;background:var(--zalia-15);border-radius:10px;font-size:12px;
-}
+.timeline{display:grid;grid-template-columns:120px 80px 1fr 100px;gap:8px 14px;padding:14px;background:var(--zalia-15);border-radius:10px;font-size:12px}
 .timeline-row{display:contents}
-.timeline-bar{
-  height:18px;background:var(--smaragdas);border-radius:6px;position:relative;
-  display:flex;align-items:center;color:#fff;padding:0 8px;font-weight:600;font-size:11px;
-}
+.timeline-bar{height:18px;background:var(--smaragdas);border-radius:6px;position:relative;display:flex;align-items:center;color:#fff;padding:0 8px;font-weight:600;font-size:11px}
 .timeline-bar.prep{background:var(--geltona);color:var(--grafitas)}
-.timeline-bar.exec{background:var(--smaragdas)}
-
-/* ALERTS */
-.alert{
-  padding:14px 18px;border-radius:10px;margin-bottom:12px;
-  display:flex;gap:12px;align-items:flex-start;
-  border-left:4px solid var(--smaragdas);background:var(--smaragdas-5);
-}
+.alert{padding:14px 18px;border-radius:10px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start;border-left:4px solid var(--smaragdas);background:var(--smaragdas-5)}
 .alert.warn{border-color:var(--geltona);background:#fff7e6}
 .alert.error{border-color:var(--raudona);background:#fdebee}
 .alert.info{border-color:var(--melyna);background:#e3f2f5}
 .alert .alert-icon{font-size:20px;flex-shrink:0}
 .alert .alert-body{flex:1}
 .alert .alert-title{font-weight:700;margin-bottom:2px}
-
-/* MODAL */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(46,54,65,.55);
-  display:none;align-items:flex-start;justify-content:center;
-  z-index:100;padding:40px 20px;overflow-y:auto;backdrop-filter:blur(4px);
-}
+.modal-overlay{position:fixed;inset:0;background:rgba(46,54,65,.55);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:40px 20px;overflow-y:auto;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
-.modal{
-  background:#fff;border-radius:var(--radius);padding:28px;
-  width:100%;max-width:760px;box-shadow:var(--shadow-lg);
-  animation:slide .25s ease;
-}
+.modal{background:#fff;border-radius:var(--radius);padding:28px;width:100%;max-width:760px;box-shadow:var(--shadow-lg);animation:slide .25s ease}
 @keyframes slide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal h3{margin-top:0}
-
-/* MISC */
 .split{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .split-end{margin-left:auto}
 .muted{color:var(--grafitas-50);font-size:12px}
 .divider{height:1px;background:var(--grafitas-15);margin:18px 0}
-.hint{
-  background:var(--smaragdas-5);padding:10px 14px;border-radius:8px;
-  font-size:12px;color:var(--grafitas);border-left:3px solid var(--smaragdas);
-}
-.empty{
-  text-align:center;padding:60px 20px;color:var(--grafitas-50);
-  background:#fff;border:2px dashed var(--grafitas-30);border-radius:14px;
-}
+.hint{background:var(--smaragdas-5);padding:10px 14px;border-radius:8px;font-size:12px;color:var(--grafitas);border-left:3px solid var(--smaragdas)}
+.empty{text-align:center;padding:60px 20px;color:var(--grafitas-50);background:#fff;border:2px dashed var(--grafitas-30);border-radius:14px}
 .empty .icon{font-size:48px;margin-bottom:8px;opacity:.4}
-
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
 .toolbar input[type="text"]{flex:1;min-width:200px}
-
-/* progress */
 .progress{height:6px;background:var(--grafitas-15);border-radius:4px;overflow:hidden;margin-top:6px}
 .progress > div{height:100%;background:var(--smaragdas);transition:.3s}
-
+.debug-log{font-family:monospace;font-size:11px;background:#0F5265;color:#cdffdb;padding:10px 14px;border-radius:8px;margin-top:8px;white-space:pre-wrap;max-height:240px;overflow:auto}
 footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 </style>
 </head>
@@ -269,7 +119,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 
 <header class="app-header">
   <div class="brand-mark">EG</div>
-  <h1>EPSO-G grupės pirkimų planavimo įrankis<small>MVP · Metinio pirkimų plano (MPP) analizė ir centralizavimas</small></h1>
+  <h1>EPSO-G grupės pirkimų planavimo įrankis<small>MVP v1.1 · Metinio pirkimų plano (MPP) analizė ir centralizavimas</small></h1>
   <div class="brand-spacer"></div>
   <div class="company-pill">
     Įmonė:
@@ -296,33 +146,19 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 
 <main>
 
-<!-- DASHBOARD -->
 <section class="section active" id="sec-dashboard">
   <h2>Apžvalga<span class="h2-sub">Bendras grupės metinio pirkimų plano vaizdas</span></h2>
-
   <div class="grid grid-4" id="kpiRow">
     <div class="kpi"><span class="kpi-label">Pirkimų iš viso</span><span class="kpi-value" id="kpiCount">0</span><span class="kpi-sub">aktyvių pozicijų plane</span></div>
     <div class="kpi cool"><span class="kpi-label">Bendra vertė</span><span class="kpi-value" id="kpiValue">0 €</span><span class="kpi-sub">be PVM</span></div>
     <div class="kpi warn"><span class="kpi-label">Reikia pataisyti</span><span class="kpi-value" id="kpiFlags">0</span><span class="kpi-sub">duomenų neatitikimų</span></div>
     <div class="kpi"><span class="kpi-label">Centralizavimo potencialas</span><span class="kpi-value" id="kpiCentral">0</span><span class="kpi-sub">galimų grupinių pirkimų</span></div>
   </div>
-
   <div class="grid grid-2" style="margin-top:16px">
-    <div class="card">
-      <h3>Pasiskirstymas pagal įmonę</h3>
-      <canvas id="chartByCompany" height="180"></canvas>
-    </div>
-    <div class="card">
-      <h3>Pirkimo objekto rūšys</h3>
-      <canvas id="chartByType" height="180"></canvas>
-    </div>
+    <div class="card"><h3>Pasiskirstymas pagal įmonę</h3><canvas id="chartByCompany" height="180"></canvas></div>
+    <div class="card"><h3>Pirkimo objekto rūšys</h3><canvas id="chartByType" height="180"></canvas></div>
   </div>
-
-  <div class="card">
-    <h3>Pirkimo būdų pasiskirstymas</h3>
-    <canvas id="chartByMethod" height="120"></canvas>
-  </div>
-
+  <div class="card"><h3>Pirkimo būdų pasiskirstymas</h3><canvas id="chartByMethod" height="120"></canvas></div>
   <div class="card">
     <h3>Greiti veiksmai</h3>
     <div class="split">
@@ -332,37 +168,37 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
       <button class="btn ghost" onclick="goTab('export')">📤 Eksportuoti planą</button>
     </div>
   </div>
-
   <div class="alert info">
     <span class="alert-icon">ℹ️</span>
     <div class="alert-body">
-      <div class="alert-title">Apie šį MVP prototipą</div>
+      <div class="alert-title">Apie šį MVP prototipą (v1.1)</div>
       Šis įrankis demonstruoja pažangaus pirkimų planavimo sprendimo galimybes EPSO-G grupei: Doclogix duomenų importą,
-      automatinę pirkimo būdo analizę pagal VPĮ/PĮ vertės ribas (galiojančias nuo 2026-01-01), terminų skaičiuoklę pagal
+      automatinę pirkimo būdo analizę pagal VPT vertės ribas (galiojančias nuo 2026-01-01), terminų skaičiuoklę pagal
       pirkimo grafiko tipą (A/B), grupės centralizavimo AI rekomendacijas ir VPT 20% taisyklės kontrolę.
+      <br><br>
+      <strong>v1.1 patobulinimai:</strong> ištaisytas Excel importas — dabar automatiškai aptinka antraštės eilutę
+      (1, 2, 3 ar gilesnė), tinkamai apdoroja JAV ir Europos formato skaičius (14,900.00 € arba 14.900,00 €),
+      praleidžia ne duomenų lapus (instrukcija, katalogas), pateikia detalų importo žurnalą.
       <br><br>
       <strong>Visi duomenys saugomi tik Jūsų naršyklėje (localStorage).</strong> Tarp seansų išsisaugo, ant serverio neperduodama.
     </div>
   </div>
 </section>
 
-<!-- IMPORT -->
 <section class="section" id="sec-import">
   <h2>Excel importas iš Doclogix DVS<span class="h2-sub">Įkelkite metinio pirkimų plano (MPP) Excel failą — automatiškai atpažinsime laukus</span></h2>
-
   <div class="card">
     <div class="dropzone" id="dz">
       <div class="icon">📥</div>
       <p><strong>Vilkite Excel failą čia</strong> arba spauskite, kad pasirinktumėte</p>
-      <p class="muted">Palaikomi formatai: .xlsx, .xls · Atpažįstami Doclogix MPP laukai</p>
+      <p class="muted">Palaikomi formatai: .xlsx, .xls · Atpažįstami Doclogix MPP laukai · Antraštės eilutė aptinkama automatiškai</p>
       <input type="file" id="fileInput" accept=".xlsx,.xls" hidden>
     </div>
     <div id="importStatus" style="margin-top:14px"></div>
   </div>
-
   <div class="card flat">
     <h3>Atpažįstami laukai (Doclogix MPP)</h3>
-    <p class="muted" style="margin-top:0">Įrankis automatiškai sutapatina šiuos laukus iš Jūsų Excel failo:</p>
+    <p class="muted" style="margin-top:0">Įrankis automatiškai sutapatina šiuos laukus (su diakritikomis ar be jų, didžiosiomis ar mažosiomis raidėmis):</p>
     <div class="grid grid-3" style="font-size:12.5px">
       <div>• Pirkimo poreikio Nr.</div>
       <div>• Pirkimo objektas</div>
@@ -392,106 +228,46 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
       Jei jo Excel faile nėra — bus naudojama viršuje pasirinkta įmonė.
     </div>
   </div>
-
-  <div class="alert warn">
-    <span class="alert-icon">⚠️</span>
-    <div class="alert-body">
-      <div class="alert-title">Rekomendacijos dėl Doclogix DVS papildomų laukų</div>
-      Norint efektyvesnės AI analitikos, rekomenduojame į Doclogix MPP įvedimo formą papildomai pridėti šiuos laukus:
-      <ul style="margin:6px 0 0 18px;padding:0">
-        <li><strong>Pirkimo prioritetas</strong> (kritinis / aukštas / standartinis)</li>
-        <li><strong>Strateginis projektas</strong> (priklauso projektui? kuriam?)</li>
-        <li><strong>Numatoma sutarties pratęsimo galimybė</strong> (pratęstina iki ... mėn.)</li>
-        <li><strong>Esamo tiekėjo žymėjimas</strong> (esamas tiekėjas / nauja rinka)</li>
-        <li><strong>Bendrumas su grupės įmonėmis</strong> (požymis „centralizavimo kandidatas")</li>
-        <li><strong>Sąnaudų centras / kaštų objektas</strong> (struktūrizuotas, ne tekstas)</li>
-      </ul>
-    </div>
-  </div>
 </section>
 
-<!-- REGISTER -->
 <section class="section" id="sec-register">
   <h2>Pirkimų registras<span class="h2-sub">Visi importuoti ir rankiniu būdu pridėti pirkimai. Galite redaguoti, šalinti, pridėti naujus.</span></h2>
-
   <div class="toolbar">
     <input type="text" id="searchBox" placeholder="🔍 Ieškoti pagal pavadinimą, BVPŽ, iniciatorių...">
     <select id="filterMethod" style="max-width:220px"><option value="">Visi pirkimo būdai</option></select>
     <select id="filterType" style="max-width:180px">
-      <option value="">Visos rūšys</option>
-      <option>Prekės</option><option>Paslaugos</option><option>Darbai</option>
+      <option value="">Visos rūšys</option><option>Prekės</option><option>Paslaugos</option><option>Darbai</option>
     </select>
     <button class="btn" onclick="addNewProc()">➕ Pridėti pirkimą</button>
     <button class="btn secondary" onclick="recalcAll()">🔄 Perskaičiuoti datas</button>
     <button class="btn danger sm" onclick="clearAll()">🗑️ Išvalyti viską</button>
   </div>
-
   <div id="registerWrap"></div>
 </section>
 
-<!-- VALIDATION -->
 <section class="section" id="sec-validation">
   <h2>Duomenų validacija<span class="h2-sub">Automatinis pirminių duomenų patikrinimas — neatitikimai, trūkumai, anomalijos</span></h2>
-
   <div class="grid grid-3" id="validationKpi">
     <div class="kpi"><span class="kpi-label">✅ Korektiški</span><span class="kpi-value" id="vOK">0</span></div>
     <div class="kpi warn"><span class="kpi-label">⚠ Įspėjimai</span><span class="kpi-value" id="vWarn">0</span></div>
     <div class="kpi bad"><span class="kpi-label">✗ Klaidos</span><span class="kpi-value" id="vErr">0</span></div>
   </div>
-
-  <div class="card">
-    <h3>Aptiktos problemos</h3>
-    <div id="validationList"></div>
-  </div>
-
-  <div class="card flat">
-    <h3>Validacijos taisyklės</h3>
-    <div class="grid grid-2" style="font-size:12.5px">
-      <div>✓ Pirkimo objektas užpildytas ir prasmingas (≥10 simbolių)</div>
-      <div>✓ Pirkimo vertė be PVM > 0</div>
-      <div>✓ BVPŽ kodas pagrindinis užpildytas (8-10 simbolių formatas NNNNNNNN-N)</div>
-      <div>✓ Iniciatorius ir padalinys nurodyti</div>
-      <div>✓ Sutarties data ne praeityje</div>
-      <div>✓ Inicijavimo data ankstesnė nei pirkimo data, pirkimo data ankstesnė nei sutarties data</div>
-      <div>✓ Pirkimo būdas atitinka VPT vertės ribas (žr. „Pirkimo būdo analizė")</div>
-      <div>✓ Pirkimas per CPO suderinamas su pirkimo būdu</div>
-      <div>✓ Tarptautinis pirkimas reikalauja Valdybos pritarimo (vertė ≥ tarptautinio ribos)</div>
-      <div>✓ BVPŽ pagrindinis kodas atitinka pirkimo objekto rūšį (prekės/paslaugos/darbai)</div>
-    </div>
-  </div>
+  <div class="card"><h3>Aptiktos problemos</h3><div id="validationList"></div></div>
 </section>
 
-<!-- METHOD -->
 <section class="section" id="sec-method">
   <h2>Pirkimo būdo analizė<span class="h2-sub">Automatinis pirkimo būdo nustatymas pagal VPĮ/PĮ vertės ribas (nuo 2026-01-01)</span></h2>
-
   <div class="card">
     <h3>Greitas pirkimo būdo testas</h3>
     <div class="form-row">
-      <div>
-        <label>Pirkimo objekto rūšis</label>
-        <select id="qtType"><option>Prekės</option><option>Paslaugos</option><option>Darbai</option></select>
-      </div>
-      <div>
-        <label>Vertė be PVM (€)</label>
-        <input type="number" id="qtValue" value="50000" step="1000">
-      </div>
-      <div>
-        <label>Įmonės teisinis statusas</label>
-        <select id="qtLaw">
-          <option value="VPI">EPSO-G (VPĮ – perkančioji organizacija)</option>
-          <option value="PI">LITGRID / Amber Grid / Energy cells (PĮ – perkantysis subjektas)</option>
-        </select>
-      </div>
-      <div>
-        <label>Specialios paslaugos? (VPĮ 2 priedas / PĮ 4 priedas)</label>
-        <select id="qtSpec"><option value="0">Ne</option><option value="1">Taip</option></select>
-      </div>
+      <div><label>Pirkimo objekto rūšis</label><select id="qtType"><option>Prekės</option><option>Paslaugos</option><option>Darbai</option></select></div>
+      <div><label>Vertė be PVM (€)</label><input type="number" id="qtValue" value="50000" step="1000"></div>
+      <div><label>Įmonės teisinis statusas</label><select id="qtLaw"><option value="VPI">EPSO-G (VPĮ)</option><option value="PI">LITGRID / Amber Grid / Energy cells (PĮ)</option></select></div>
+      <div><label>Spec. paslaugos? (VPĮ 2 priedas / PĮ 4 priedas)</label><select id="qtSpec"><option value="0">Ne</option><option value="1">Taip</option></select></div>
     </div>
     <button class="btn lg" onclick="runMethodTest()">⚖️ Analizuoti</button>
     <div id="methodResult" style="margin-top:18px"></div>
   </div>
-
   <div class="card flat">
     <h3>VPT vertės ribos (galiojančios nuo 2026-01-01)</h3>
     <div class="grid grid-2">
@@ -518,139 +294,83 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
       </div>
     </div>
     <div class="hint" style="margin-top:12px">
-      📌 <strong>20 % taisyklė:</strong> Net jei numatoma vertė pasiekia tarptautinio pirkimo ribą, atskiroms dalims iki <strong>80 000 €</strong>
-      (prekės/paslaugos) arba <strong>1 000 000 €</strong> (darbai) galima atlikti supaprastintus pirkimus, jei jų bendra vertė neviršija 20 % bendros plano vertės.
+      📌 <strong>20 % taisyklė:</strong> Net jei numatoma vertė pasiekia tarptautinio pirkimo ribą, atskiroms dalims iki <strong>80 000 €</strong> (prekės/paslaugos) arba <strong>1 000 000 €</strong> (darbai) galima atlikti supaprastintus pirkimus, jei jų bendra vertė neviršija 20 % bendros plano vertės.
     </div>
   </div>
-
   <div class="card">
     <h3>Visų plane esančių pirkimų būdo audito ataskaita</h3>
-    <p class="muted">Įrankis tikrina, ar nurodytas pirkimo būdas atitinka pirkimo vertę ir tipą. Neatitikimai pažymėti.</p>
+    <p class="muted">Įrankis tikrina, ar nurodytas pirkimo būdas atitinka pirkimo vertę ir tipą.</p>
     <div id="methodAudit"></div>
   </div>
 </section>
 
-<!-- DURATION -->
 <section class="section" id="sec-duration">
-  <h2>Terminų skaičiuoklė<span class="h2-sub">Atgalinis terminų skaičiavimas pagal A/B grafiko tipus su darbo dienų logika ir LR šventėmis</span></h2>
-
+  <h2>Terminų skaičiuoklė<span class="h2-sub">Atgalinis terminų skaičiavimas pagal A/B grafiko tipus su LR darbo dienomis</span></h2>
   <div class="grid grid-2">
     <div class="card">
       <h3>Atgalinis skaičiavimas (nuo sutarties datos)</h3>
       <div class="form-row">
-        <div>
-          <label>Pirkimo būdas</label>
-          <select id="durMethod"></select>
-        </div>
-        <div>
-          <label>Grafiko tipas</label>
-          <select id="durType">
-            <option value="A">A grafikas (standartinis)</option>
-            <option value="B">B grafikas (su buferiu +20%)</option>
-          </select>
-        </div>
+        <div><label>Pirkimo būdas</label><select id="durMethod"></select></div>
+        <div><label>Grafiko tipas</label><select id="durType"><option value="A">A grafikas (standartinis)</option><option value="B">B grafikas (+20% buferis)</option></select></div>
       </div>
-      <div class="form-row">
-        <div>
-          <label>Numatoma sutarties data</label>
-          <input type="date" id="durContract" value="2026-12-31">
-        </div>
-      </div>
+      <div class="form-row"><div><label>Numatoma sutarties data</label><input type="date" id="durContract" value="2026-12-31"></div></div>
       <button class="btn lg" onclick="runDuration()">⏱️ Skaičiuoti</button>
       <div id="durResult" style="margin-top:14px"></div>
     </div>
-
     <div class="card">
       <h3>Pirkimo būdų terminų katalogas</h3>
       <div class="table-wrap" style="max-height:420px">
         <table id="methodCatalog">
-          <thead>
-            <tr><th>Kodas</th><th>Pavadinimas</th><th>Pasirengimas (d.d.)</th><th>Procedūros (d.d.)</th><th>Iš viso (d.d.)</th></tr>
-          </thead>
+          <thead><tr><th>Kodas</th><th>Pavadinimas</th><th>Pasirengimas (d.d.)</th><th>Procedūros (d.d.)</th><th>Iš viso (d.d.)</th></tr></thead>
           <tbody></tbody>
         </table>
-      </div>
-      <div class="hint" style="margin-top:10px">
-        📌 d.d. = darbo dienos. B grafikas prideda +20% trukmės kaip rezervą atsakymams į klausimus, derinimo etapams ir nenumatytiems delsimams.
       </div>
     </div>
   </div>
 </section>
 
-<!-- CENTRALIZATION -->
 <section class="section" id="sec-centralization">
   <h2>AI centralizavimo analizė<span class="h2-sub">Algoritmas analizuoja visų grupės įmonių planus ir siūlo, kuriuos pirkimus apjungti grupės lygmeniu</span></h2>
-
   <div class="card flat">
     <h3>Kaip veikia algoritmas</h3>
     <div class="grid grid-2" style="font-size:13px">
-      <div>
-        <strong>1️⃣ Grupavimas pagal BVPŽ:</strong> Pirkimai grupuojami pagal pirmus 3 BVPŽ kodo skaičius (CPV3 grupė) — pvz. „302" (kompiuterinė įranga), „722" (IT paslaugos), „794" (konsultacijos).
-      </div>
-      <div>
-        <strong>2️⃣ Vertės agregavimas:</strong> Susumuojamos visų grupės įmonių planuojamos vertės pagal CPV3.
-      </div>
-      <div>
-        <strong>3️⃣ Datų derinimas:</strong> Tikrinama, ar sutarties datos sutampa per ±90 d. langą — fizinė centralizavimo galimybė.
-      </div>
-      <div>
-        <strong>4️⃣ Sinergijos vertinimas:</strong> Nustatomas potencialus santaupų % nuo bendros vertės (10% – maža sinergija, 30% – stipri).
-      </div>
+      <div><strong>1️⃣ Grupavimas pagal BVPŽ:</strong> Pirkimai grupuojami pagal pirmus 3 BVPŽ kodo skaičius (CPV3 grupė).</div>
+      <div><strong>2️⃣ Vertės agregavimas:</strong> Susumuojamos visų grupės įmonių planuojamos vertės pagal CPV3.</div>
+      <div><strong>3️⃣ Datų derinimas:</strong> Tikrinama, ar sutarties datos sutampa per ±90 d. langą.</div>
+      <div><strong>4️⃣ Sinergijos vertinimas:</strong> Potencialus santaupų % nuo bendros vertės (10/15/25%).</div>
     </div>
   </div>
-
   <div class="card">
     <div class="split">
       <h3 style="margin:0">Centralizavimo kandidatų sąrašas</h3>
-      <div class="split-end">
-        <button class="btn" onclick="runCentralAnalysis()">🤝 Atlikti analizę</button>
-      </div>
+      <div class="split-end"><button class="btn" onclick="runCentralAnalysis()">🤝 Atlikti analizę</button></div>
     </div>
     <div id="centralResult" style="margin-top:14px"><div class="empty"><div class="icon">🤝</div>Spauskite „Atlikti analizę" — algoritmas peržiūrės visų įmonių pirkimus.</div></div>
   </div>
 </section>
 
-<!-- EXPORT -->
 <section class="section" id="sec-export">
   <h2>Eksportas<span class="h2-sub">Eksportuokite vienos įmonės, kelių ar viso grupės plano duomenis</span></h2>
-
   <div class="grid grid-2">
     <div class="card">
       <h3>Excel eksportas</h3>
       <p class="muted">Sukurs .xlsx failą su pilna duomenų lentele, atskirais lapais kiekvienai įmonei ir suvestine.</p>
       <div class="form-row">
-        <div>
-          <label>Filtruoti pagal įmonę</label>
-          <select id="exportCompany">
-            <option value="ALL">Visos grupės įmonės (4 atskiri lapai)</option>
-            <option value="EPSO-G">Tik EPSO-G</option>
-            <option value="LITGRID">Tik LITGRID</option>
-            <option value="AMBER">Tik Amber Grid</option>
-            <option value="ECELLS">Tik Energy cells</option>
-          </select>
+        <div><label>Filtruoti pagal įmonę</label>
+          <select id="exportCompany"><option value="ALL">Visos grupės įmonės</option><option value="EPSO-G">EPSO-G</option><option value="LITGRID">LITGRID</option><option value="AMBER">Amber Grid</option><option value="ECELLS">Energy cells</option></select>
         </div>
-        <div>
-          <label>Įtraukti analizes</label>
-          <select id="exportInclude">
-            <option value="full">Pilnas (su validacija + centralizavimu)</option>
-            <option value="data">Tik duomenys (be analizių)</option>
-          </select>
+        <div><label>Įtraukti analizes</label>
+          <select id="exportInclude"><option value="full">Pilnas (su validacija)</option><option value="data">Tik duomenys</option></select>
         </div>
       </div>
       <button class="btn lg" onclick="exportExcel()">📊 Eksportuoti Excel</button>
     </div>
-
     <div class="card">
       <h3>PDF eksportas</h3>
-      <p class="muted">Sukurs .pdf ataskaitą su EPSO-G vizualiniu identitetu — tinka viduriniam aukščiausiajam vadovavimui.</p>
+      <p class="muted">Sukurs .pdf ataskaitą su EPSO-G vizualiniu identitetu.</p>
       <div class="form-row">
-        <div>
-          <label>Ataskaitos tipas</label>
-          <select id="exportPdfType">
-            <option value="summary">Vykdomoji santrauka (1-2 psl.)</option>
-            <option value="full">Pilnas pirkimų sąrašas</option>
-            <option value="central">Centralizavimo rekomendacijos</option>
-          </select>
+        <div><label>Ataskaitos tipas</label>
+          <select id="exportPdfType"><option value="summary">Vykdomoji santrauka</option><option value="full">Pilnas sąrašas</option><option value="central">Centralizavimo rekomendacijos</option></select>
         </div>
       </div>
       <button class="btn lg" onclick="exportPdf()">📄 Eksportuoti PDF</button>
@@ -660,20 +380,14 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 
 </main>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal" id="modalContent"></div>
-</div>
+<div class="modal-overlay" id="modal"><div class="modal" id="modalContent"></div></div>
 
 <footer>
-  EPSO-G grupės pirkimų planavimo įrankis · MVP prototipas · Duomenys saugomi tik naršyklėje<br>
+  EPSO-G grupės pirkimų planavimo įrankis · MVP v1.1 · Duomenys saugomi tik naršyklėje<br>
   Atitinka VPĮ ir PĮ reikalavimus, naudoja VPT vertės ribas nuo 2026-01-01
 </footer>
 
 <script>
-/* =========================================================
-   DATA MODEL & STORAGE
-   ========================================================= */
 const STORAGE_KEY = "epsog_mpp_v1";
 let DATA = {procurements: []};
 
@@ -700,13 +414,11 @@ const METHODS = {
   "DPS-K":  {name:"DPS konkretus",                                    full:"Konkretus pirkimas DPS sistemoje",                     prep:7,  exec:45,  total:52,  cat:"dps"}
 };
 
-// VPT thresholds (from 2026-01-01)
 const THRESHOLDS = {
   VPI: { intl_goods: 216000, intl_goods_cva: 140000, intl_special: 750000, intl_works: 5404000, mv_goods: 70000, mv_works: 174000 },
   PI:  { intl_goods: 432000, intl_special: 1000000, intl_works: 5404000, mv_goods: 70000, mv_works: 174000 }
 };
 
-// Lithuanian holidays 2026-2027
 const HOLIDAYS = [
   "2026-01-01","2026-02-16","2026-03-11","2026-04-05","2026-04-06",
   "2026-05-01","2026-05-03","2026-06-07","2026-06-24","2026-07-06",
@@ -716,101 +428,85 @@ const HOLIDAYS = [
   "2027-08-15","2027-11-01","2027-11-02","2027-12-24","2027-12-25","2027-12-26"
 ];
 
-/* =========================================================
-   PERSISTENCE
-   ========================================================= */
+/* ==================== PERSISTENCE ==================== */
 function save(){ try{localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA))}catch(e){} }
-function load(){
-  try{
-    const s = localStorage.getItem(STORAGE_KEY);
-    if(s){ DATA = JSON.parse(s); }
-  }catch(e){}
-}
+function load(){ try{const s=localStorage.getItem(STORAGE_KEY); if(s) DATA=JSON.parse(s);}catch(e){} }
 
-/* =========================================================
-   WORKDAY CALCULATIONS
-   ========================================================= */
-function isHoliday(d){
-  const iso = d.toISOString().slice(0,10);
-  return HOLIDAYS.includes(iso);
-}
-function isWorkday(d){
-  const dow = d.getDay();
-  return dow !== 0 && dow !== 6 && !isHoliday(d);
-}
+/* ==================== WORKDAY ==================== */
+function isHoliday(d){ return HOLIDAYS.includes(d.toISOString().slice(0,10)); }
+function isWorkday(d){ const dow=d.getDay(); return dow!==0 && dow!==6 && !isHoliday(d); }
 function addWorkdays(date, days){
-  const d = new Date(date);
-  let added = 0;
-  const dir = days >= 0 ? 1 : -1;
-  const target = Math.abs(days);
-  while(added < target){
-    d.setDate(d.getDate() + dir);
-    if(isWorkday(d)) added++;
-  }
+  const d=new Date(date); let added=0; const dir=days>=0?1:-1; const target=Math.abs(days);
+  while(added<target){ d.setDate(d.getDate()+dir); if(isWorkday(d)) added++; }
   return d;
 }
-function fmtDate(d){
-  if(!(d instanceof Date)) d = new Date(d);
-  if(isNaN(d)) return "";
-  return d.toISOString().slice(0,10);
-}
+function fmtDate(d){ if(!(d instanceof Date)) d=new Date(d); if(isNaN(d)) return ""; return d.toISOString().slice(0,10); }
 function parseDate(s){
   if(!s) return null;
-  if(s instanceof Date) return s;
-  // Try ISO first
-  const d = new Date(s);
-  if(!isNaN(d)) return d;
-  // Try DD.MM.YYYY
-  const m = String(s).match(/^(\d{1,2})[\.\/-](\d{1,2})[\.\/-](\d{4})$/);
+  if(s instanceof Date) return isNaN(s)?null:s;
+  // Excel serial number
+  if(typeof s === "number" && s > 25569){
+    const d = new Date((s - 25569) * 86400 * 1000);
+    return isNaN(d) ? null : d;
+  }
+  const str = String(s).trim();
+  if(!str) return null;
+  // ISO yyyy-mm-dd
+  const iso = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(iso) return new Date(+iso[1], +iso[2]-1, +iso[3]);
+  // DD.MM.YYYY or DD/MM/YYYY or DD-MM-YYYY
+  const m = str.match(/^(\d{1,2})[\.\/-](\d{1,2})[\.\/-](\d{4})/);
   if(m) return new Date(+m[3], +m[2]-1, +m[1]);
-  return null;
+  // Last resort
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
 }
 
-/* =========================================================
-   METHOD ANALYSIS
-   ========================================================= */
+/* ==================== NUMBER PARSER (FIXED v1.1) ==================== */
+// Handles both US "14,900.00 €" and European "14.900,00 €" formats correctly
+function parseNum(v){
+  if(typeof v === "number") return v;
+  if(v === null || v === undefined) return 0;
+  const s = String(v).replace(/[^\d.,\-]/g, "").trim();
+  if(!s) return 0;
+  const lastComma = s.lastIndexOf(",");
+  const lastDot = s.lastIndexOf(".");
+  if(lastComma === -1 && lastDot === -1) return parseFloat(s) || 0;
+  // If comma comes after dot: European format (1.500.000,00) → dots are thousands
+  if(lastComma > lastDot) return parseFloat(s.replace(/\./g,"").replace(",",".")) || 0;
+  // Otherwise: US format (1,500,000.00) → commas are thousands
+  return parseFloat(s.replace(/,/g,"")) || 0;
+}
+
+/* ==================== METHOD ANALYSIS ==================== */
 function recommendMethod(value, type, law, isSpecial){
-  const T = THRESHOLDS[law];
-  const isWorks = type === "Darbai";
+  const T = THRESHOLDS[law]; const isWorks = type === "Darbai";
   const intlThreshold = isWorks ? T.intl_works : (isSpecial ? T.intl_special : (T.intl_goods_cva || T.intl_goods));
   const mvThreshold = isWorks ? T.mv_works : T.mv_goods;
-
   let category, recommended, reason;
   if(value >= intlThreshold){
-    category = "Tarptautinis";
-    recommended = isWorks ? "T-AK" : (value > 1000000 ? "T-AK" : "T-AK");
-    reason = `Vertė ${fmtMoney(value)} ≥ tarptautinio ribos (${fmtMoney(intlThreshold)}). Privaloma skelbti tarptautiniame lygmenyje, įskaitant ES OJ.`;
+    category = "Tarptautinis"; recommended = "T-AK";
+    reason = `Vertė ${fmtMoney(value)} ≥ tarptautinio ribos (${fmtMoney(intlThreshold)}). Privaloma skelbti tarptautiniame lygmenyje.`;
   } else if(value >= mvThreshold){
-    category = "Supaprastintas";
-    recommended = "S-AK";
-    reason = `Vertė ${fmtMoney(value)} mažesnė už tarptautinio ribą (${fmtMoney(intlThreshold)}), bet ≥ mažos vertės ribos (${fmtMoney(mvThreshold)}). Vykdomas supaprastinta tvarka.`;
+    category = "Supaprastintas"; recommended = "S-AK";
+    reason = `Vertė ${fmtMoney(value)} mažesnė už tarptautinio ribą, bet ≥ mažos vertės ribos (${fmtMoney(mvThreshold)}).`;
   } else if(value >= 15000){
-    category = "Mažos vertės";
-    recommended = value < 15000 ? "MV-NZ" : (value < 30000 ? "MV-NR" : "MV-SAB");
-    reason = `Vertė ${fmtMoney(value)} mažesnė už mažos vertės ribą (${fmtMoney(mvThreshold)}). Galimas mažos vertės pirkimas.`;
+    category = "Mažos vertės"; recommended = value < 30000 ? "MV-NR" : "MV-SAB";
+    reason = `Vertė ${fmtMoney(value)} mažesnė už mažos vertės ribą (${fmtMoney(mvThreshold)}).`;
   } else {
-    category = "Mažos vertės";
-    recommended = "MV-NZ";
+    category = "Mažos vertės"; recommended = "MV-NZ";
     reason = `Maža vertė (${fmtMoney(value)}) — galima žodinė apklausa.`;
   }
-
-  // 20% rule applicability
   const rule20 = (value >= intlThreshold) ? {
-    applies: true,
-    threshold: isWorks ? 1000000 : 80000,
+    applies: true, threshold: isWorks ? 1000000 : 80000,
     note: `20% taisyklė: atskiroms dalims iki ${isWorks ? "1 000 000 €" : "80 000 €"} galima atlikti supaprastintus pirkimus, jei jų bendra vertė ≤ 20% pirkimo plano vertės.`
   } : {applies:false};
-
   return {category, recommended, reason, rule20, intlThreshold, mvThreshold};
 }
 
-function fmtMoney(v){
-  return new Intl.NumberFormat("lt-LT",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(v||0);
-}
+function fmtMoney(v){ return new Intl.NumberFormat("lt-LT",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(v||0); }
 
-/* =========================================================
-   VALIDATION ENGINE
-   ========================================================= */
+/* ==================== VALIDATION ==================== */
 function validateProc(p){
   const issues = [];
   if(!p.objektas || p.objektas.length < 5) issues.push({sev:"err", msg:"Pirkimo objektas neužpildytas arba per trumpas"});
@@ -820,8 +516,6 @@ function validateProc(p){
   if(!p.bvpz) issues.push({sev:"err", msg:"BVPŽ kodas (pagrindinis) neužpildytas"});
   else if(!/^\d{8}-\d/.test(p.bvpz)) issues.push({sev:"warn", msg:"BVPŽ kodo formatas neatitinka standartinio NNNNNNNN-N"});
   if(!p.budas) issues.push({sev:"warn", msg:"Pirkimo būdas nenurodytas"});
-
-  // Date logic
   const dContract = parseDate(p.sutarciesData);
   const dProc = parseDate(p.pirkimoData);
   const dInit = parseDate(p.inicData);
@@ -829,8 +523,6 @@ function validateProc(p){
   else if(dContract < new Date()) issues.push({sev:"warn", msg:"Sutarties data praeityje"});
   if(dInit && dProc && dInit > dProc) issues.push({sev:"err", msg:"Inicijavimo data vėlesnė nei pirkimo pradžios"});
   if(dProc && dContract && dProc > dContract) issues.push({sev:"err", msg:"Pirkimo data vėlesnė nei sutarties data"});
-
-  // Method vs value compatibility
   if(p.budas && p.verte && p.rusis){
     const company = COMPANIES[p.imone] || COMPANIES["EPSO-G"];
     const rec = recommendMethod(p.verte, p.rusis, company.law, false);
@@ -839,34 +531,29 @@ function validateProc(p){
       const mCat = METHODS[mCode]?.cat;
       const expectedCat = rec.category === "Tarptautinis" ? "t" : rec.category === "Supaprastintas" ? "s" : "mv";
       if(mCat && mCat !== expectedCat && mCat !== "cpo" && mCat !== "dps"){
-        issues.push({sev:"warn", msg:`Pasirinktas pirkimo būdas (${mCode}) neatitinka rekomenduojamos kategorijos (${rec.category}). Žr. „Pirkimo būdo analizė"`});
+        issues.push({sev:"warn", msg:`Pasirinktas būdas (${mCode}) neatitinka rekomenduojamos kategorijos (${rec.category})`});
       }
     }
   }
-
-  // CPO compatibility
-  if(p.cpo === "Taip" && p.budas && !p.budas.toLowerCase().includes("cpo") && !p.budas.toLowerCase().includes("mažos vertės")){
-    issues.push({sev:"warn", msg:'Pažymėta „Pirkimas per CPO", bet pirkimo būdas nėra CPO arba mažos vertės'});
+  if(p.cpo === "Taip" && p.budas && !p.budas.toLowerCase().includes("cpo") && !p.budas.toLowerCase().includes("mažos vertės") && !p.budas.toLowerCase().includes("mazos vertes")){
+    issues.push({sev:"warn", msg:'Pažymėta „Per CPO", bet pirkimo būdas nėra CPO arba mažos vertės'});
   }
-
-  // International needs board approval
   const company = COMPANIES[p.imone] || COMPANIES["EPSO-G"];
   const T = THRESHOLDS[company.law];
   if(p.verte >= (p.rusis === "Darbai" ? T.intl_works : T.intl_goods) && p.valdyba !== "Taip"){
     issues.push({sev:"warn", msg:"Tarptautinė vertė — paprastai reikalingas Valdybos pritarimas"});
   }
-
   return issues;
 }
 
 function mapMethodNameToCode(name){
   if(!name) return null;
-  const n = name.toLowerCase();
+  const n = String(name).toLowerCase();
   if(n.includes("cpo")) return "CPO";
-  if(n.includes("žodž")) return "MV-NZ";
-  if(n.includes("neskelbiama") && n.includes("rašt")) return "MV-NR";
-  if(n.includes("mažos") && n.includes("be deryb")) return "MV-SAB";
-  if(n.includes("mažos") && n.includes("su deryb")) return "MV-SAD";
+  if(n.includes("žodž") || n.includes("zodz")) return "MV-NZ";
+  if((n.includes("mažos") || n.includes("mazos")) && (n.includes("neskelbiama") || n.includes("rašt") || n.includes("rast"))) return "MV-NR";
+  if((n.includes("mažos") || n.includes("mazos")) && (n.includes("be deryb"))) return "MV-SAB";
+  if((n.includes("mažos") || n.includes("mazos")) && (n.includes("su deryb"))) return "MV-SAD";
   if(n.includes("supaprastint") && n.includes("neskelbiam")) return "S-ND";
   if(n.includes("atviras") && n.includes("supaprastint")) return "S-AK";
   if(n.includes("supaprastint") && n.includes("skelbiam")) return "S-SD";
@@ -878,13 +565,9 @@ function mapMethodNameToCode(name){
   return null;
 }
 
-/* =========================================================
-   TABS
-   ========================================================= */
+/* ==================== TABS ==================== */
 document.getElementById("tabs").addEventListener("click", e=>{
-  const t = e.target.closest(".tab");
-  if(!t) return;
-  goTab(t.dataset.section);
+  const t = e.target.closest(".tab"); if(!t) return; goTab(t.dataset.section);
 });
 function goTab(name){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.section===name));
@@ -894,13 +577,115 @@ function goTab(name){
   if(name==="validation") renderValidation();
   if(name==="method") renderMethodAudit();
   if(name==="duration") populateDurationOptions();
-  if(name==="centralization") {} // user clicks button
   window.scrollTo(0,0);
 }
 
-/* =========================================================
-   IMPORT
-   ========================================================= */
+/* ==================== FIELD MAP & NORMALIZATION (FIXED v1.1) ==================== */
+const FIELD_MAP = {
+  "Pirkimo poreikio Nr.": "nr",
+  "Pirkimo Nr.": "nr",
+  "Nr.": "nr",
+  "Pirkimo objektas": "objektas",
+  "Objektas": "objektas",
+  "Planuojama pirkimo vertė be PVM": "verte",
+  "Pirkimo vertė be PVM": "verte",
+  "Vertė be PVM": "verte",
+  "Vertė": "verte",
+  "Suma": "verte",
+  "Poreikio iniciatorius": "iniciatorius",
+  "Iniciatorius": "iniciatorius",
+  "Poreikio iniciatoriaus padalinys": "padalinys",
+  "Iniciatoriaus padalinys": "padalinys",
+  "Padalinys": "padalinys",
+  "Pirkimo objekto rūšys": "rusis",
+  "Pirkimo objekto rūšis": "rusis",
+  "Pirkimo rūšis": "rusis",
+  "Rūšis": "rusis",
+  "Rūšys": "rusis",
+  "Pirkimo būdas": "budas",
+  "Būdas": "budas",
+  "Numatoma pirkimo inicijavimo data": "inicData",
+  "Pirkimo inicijavimo data": "inicData",
+  "Inicijavimo data": "inicData",
+  "Planuojama pirkimo data": "pirkimoData",
+  "Pirkimo data": "pirkimoData",
+  "Numatoma sutarties sudarymo data": "sutarciesData",
+  "Sutarties sudarymo data": "sutarciesData",
+  "Sutarties data": "sutarciesData",
+  "Planuojamos sutarties trukmė (mėn.)": "trukme",
+  "Sutarties trukmė (mėn.)": "trukme",
+  "Sutarties trukmė": "trukme",
+  "Trukmė (mėn.)": "trukme",
+  "BVPŽ kodas - pagrindinis": "bvpz",
+  "BVPŽ kodas": "bvpz",
+  "BVPŽ pagrindinis": "bvpz",
+  "BVPŽ": "bvpz",
+  "CPV": "bvpz",
+  "BVPŽ kodas(-ai) - papildomi": "bvpzExtra",
+  "BVPŽ papildomi": "bvpzExtra",
+  "Sutartis": "sutartis",
+  "Perkama pagal poreikį": "perkamaPoreikiui",
+  "Pirkimas atliekamas per CVPIS": "cvpis",
+  "Per CVPIS": "cvpis",
+  "CVPIS": "cvpis",
+  "Pirkimas atliekamas per CPO": "cpo",
+  "Per CPO": "cpo",
+  "CPO": "cpo",
+  "Tiekėjų skaičius": "tiekejai",
+  "Finansuojama iš Europos Sąjungos lėšų": "esLesos",
+  "ES lėšos": "esLesos",
+  "Pirkimo metu keliami reikalavimai dėl atitikties nacionalinio saugumo interesams": "natSaugumas",
+  "Nacionalinio saugumo reikalavimai": "natSaugumas",
+  "Ar reikalingas Valdybos pritarimas": "valdyba",
+  "Valdybos pritarimas": "valdyba",
+  "Sąnaudos/Investicijos": "capex",
+  "Sąnaudos / Investicijos": "capex",
+  "CAPEX/OPEX": "capex",
+  "Nenumatytas pirkimo poreikis": "nenumatytas",
+  "Būsena": "busena",
+  "Metinis pirkimo planas": "planas",
+  "Sukūrimo data": "sukurimoData",
+  "Ar bus taikomi aplinkosauginiai reikalavimai": "ekoReikalavimai",
+  "Aplinkosauginiai reikalavimai": "ekoReikalavimai",
+  "Kriterijus": "kriterijus",
+  "Vertinimo kriterijus": "kriterijus",
+  "Pastabos": "pastabos",
+  "Pirkimą vykdys": "vykdys",
+  "Pirkimo padalinys vykdantis pirkimą": "vykdantisPadalinys",
+  "Įmonė": "imone",
+  "Imone": "imone",
+  // New fields
+  "Pirkimo prioritetas": "prioritetas",
+  "Strateginis projektas": "projektas",
+  "Centralizavimo kandidatas": "centralKandidatas",
+  "Esamas tiekėjas": "esamasTiekejas",
+  "Sąnaudų centras / kaštų objektas": "kastObj",
+  "Sąnaudų centras": "kastObj"
+};
+
+// Normalize Lithuanian text: lowercase, remove diacritics, normalize spaces
+function normField(s){
+  return String(s||"")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g,"")
+    .toLowerCase()
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+// Pre-build normalized FIELD_MAP for fast lookup
+const FIELD_MAP_NORM = {};
+for(const [k,v] of Object.entries(FIELD_MAP)){
+  FIELD_MAP_NORM[normField(k)] = v;
+}
+
+function lookupField(header){
+  const direct = FIELD_MAP[header];
+  if(direct) return direct;
+  return FIELD_MAP_NORM[normField(header)] || null;
+}
+
+/* ==================== IMPORT (FIXED v1.1) ==================== */
 const dz = document.getElementById("dz");
 const fi = document.getElementById("fileInput");
 dz.addEventListener("click", ()=>fi.click());
@@ -912,32 +697,6 @@ dz.addEventListener("drop", e=>{
 });
 fi.addEventListener("change", ()=>{ if(fi.files[0]) handleFile(fi.files[0]); });
 
-const FIELD_MAP = {
-  "Pirkimo poreikio Nr.": "nr",
-  "Pirkimo objektas": "objektas",
-  "Planuojama pirkimo vertė be PVM": "verte",
-  "Poreikio iniciatorius": "iniciatorius",
-  "Poreikio iniciatoriaus padalinys": "padalinys",
-  "Pirkimo objekto rūšys": "rusis",
-  "Pirkimo būdas": "budas",
-  "Numatoma pirkimo inicijavimo data": "inicData",
-  "Planuojama pirkimo data": "pirkimoData",
-  "Numatoma sutarties sudarymo data": "sutarciesData",
-  "Planuojamos sutarties trukmė (mėn.)": "trukme",
-  "BVPŽ kodas - pagrindinis": "bvpz",
-  "BVPŽ kodas(-ai) - papildomi": "bvpzExtra",
-  "Sutartis": "sutartis",
-  "Pirkimas atliekamas per CVPIS": "cvpis",
-  "Pirkimas atliekamas per CPO": "cpo",
-  "Tiekėjų skaičius": "tiekejai",
-  "Finansuojama iš Europos Sąjungos lėšų": "esLesos",
-  "Ar reikalingas Valdybos pritarimas": "valdyba",
-  "Sąnaudos/Investicijos": "capex",
-  "Kriterijus": "kriterijus",
-  "Pastabos": "pastabos",
-  "Įmonė": "imone"
-};
-
 function handleFile(f){
   const status = document.getElementById("importStatus");
   status.innerHTML = `<div class="alert info"><span class="alert-icon">⏳</span><div class="alert-body">Apdorojama: <strong>${f.name}</strong> (${(f.size/1024).toFixed(1)} KB)...</div></div>`;
@@ -945,43 +704,100 @@ function handleFile(f){
   reader.onload = ev => {
     try{
       const wb = XLSX.read(ev.target.result, {type:"array", cellDates:true});
-      let imported = 0, skipped = 0;
       const defaultCompany = document.getElementById("companyFilter").value !== "ALL" ? document.getElementById("companyFilter").value : "EPSO-G";
+      const log = [];
+      let imported = 0, skipped = 0;
+      log.push(`📂 Failas: ${f.name}`);
+      log.push(`📑 Lapai (${wb.SheetNames.length}): ${wb.SheetNames.join(", ")}`);
+
       wb.SheetNames.forEach(sn => {
         const ws = wb.Sheets[sn];
-        const rows = XLSX.utils.sheet_to_json(ws, {raw:false, defval:"", dateNF:"yyyy-mm-dd"});
-        rows.forEach(r => {
+        // Read as array-of-arrays first to detect header row
+        const aoa = XLSX.utils.sheet_to_json(ws, {header:1, raw:false, defval:""});
+        if(aoa.length === 0){ log.push(`  ⏭ "${sn}": tuščias lapas`); return; }
+
+        // Find header row by scanning first 15 rows for known field names
+        let headerRowIdx = -1, bestMatches = 0;
+        for(let i = 0; i < Math.min(aoa.length, 15); i++){
+          const row = aoa[i] || [];
+          const matches = row.filter(c => lookupField(String(c||"").trim())).length;
+          if(matches > bestMatches){ bestMatches = matches; headerRowIdx = i; }
+        }
+        if(bestMatches < 2){
+          log.push(`  ⏭ "${sn}": antraštės nerasta (rasta ${bestMatches} žinomų laukų — gali būti instrukcijų/katalogų lapas)`);
+          return;
+        }
+
+        const headers = aoa[headerRowIdx].map(h => String(h||"").trim());
+        const mappedHeaders = headers.map(h => ({raw:h, key:lookupField(h)}));
+        const matchedCount = mappedHeaders.filter(m=>m.key).length;
+        log.push(`  ✓ "${sn}": antraštės eilutėje ${headerRowIdx+1} — atpažinta ${matchedCount}/${headers.filter(Boolean).length} laukų`);
+
+        let sheetImported = 0, sheetSkipped = 0;
+        for(let i = headerRowIdx + 1; i < aoa.length; i++){
+          const row = aoa[i] || [];
+          if(row.every(c => c === "" || c === null || c === undefined)) continue;
           const rec = {imone: defaultCompany};
           let hasData = false;
-          for(const [k,v] of Object.entries(r)){
-            const mapped = FIELD_MAP[k.trim()] || FIELD_MAP[Object.keys(FIELD_MAP).find(fk=>fk.toLowerCase()===k.trim().toLowerCase())] || null;
-            if(mapped){
-              rec[mapped] = v;
-              if(v) hasData = true;
-            }
+          for(let j = 0; j < mappedHeaders.length; j++){
+            const m = mappedHeaders[j];
+            if(!m.key) continue;
+            let v = row[j];
+            if(v === undefined || v === null) continue;
+            // Skip Excel error values
+            const sv = String(v).trim();
+            if(/^#(REF|VALUE|NAME|DIV|N\/A|NULL|NUM)/.test(sv)) continue;
+            if(sv === "") continue;
+            rec[m.key] = v;
+            hasData = true;
           }
-          if(rec.verte) rec.verte = parseFloat(String(rec.verte).replace(/[^\d.,-]/g,"").replace(",","."))||0;
-          if(rec.trukme) rec.trukme = parseInt(rec.trukme)||rec.trukme;
-          if(rec.objektas && rec.verte){
-            rec.id = "imp_"+Date.now()+"_"+Math.random().toString(36).slice(2,7);
-            rec.imone = rec.imone || defaultCompany;
+          if(rec.verte !== undefined) rec.verte = parseNum(rec.verte);
+          if(rec.trukme !== undefined) rec.trukme = parseInt(rec.trukme) || rec.trukme;
+          // Normalize imone field (handle full names)
+          if(rec.imone){
+            const im = String(rec.imone).trim().toUpperCase();
+            if(im.includes("EPSO-G") || im.includes("EPSOG")) rec.imone = "EPSO-G";
+            else if(im.includes("LITGRID") || im.includes("LIT-G") || im.includes("LITG")) rec.imone = "LITGRID";
+            else if(im.includes("AMBER")) rec.imone = "AMBER";
+            else if(im.includes("ECELLS") || im.includes("ENERGY") || im.includes("ENERGIJA")) rec.imone = "ECELLS";
+            else rec.imone = defaultCompany;
+          }
+          if(rec.objektas && rec.verte > 0){
+            rec.id = "imp_" + Date.now() + "_" + Math.random().toString(36).slice(2,7);
             DATA.procurements.push(rec);
-            imported++;
-          } else if(hasData) skipped++;
-        });
+            imported++; sheetImported++;
+          } else if(hasData){
+            skipped++; sheetSkipped++;
+          }
+        }
+        log.push(`     → įkelta: ${sheetImported}, praleista: ${sheetSkipped}`);
       });
+
       save();
-      status.innerHTML = `<div class="alert"><span class="alert-icon">✅</span><div class="alert-body"><div class="alert-title">Sėkmingai importuota</div>Įkelta <strong>${imported}</strong> pirkimų. Praleista neužbaigtų: ${skipped}. <button class="btn ghost sm" onclick="goTab('register')">Peržiūrėti registrą →</button></div></div>`;
+      const cls = imported > 0 ? "" : (skipped > 0 ? "warn" : "error");
+      const icon = imported > 0 ? "✅" : (skipped > 0 ? "⚠️" : "❌");
+      const titleMsg = imported > 0 ? "Sėkmingai importuota" : "Nieko nepavyko importuoti";
+      const detailMsg = imported > 0
+        ? `Įkelta <strong>${imported}</strong> pirkimų. Praleista neužbaigtų: ${skipped}.`
+        : `Failo struktūra neatpažinta. Žiūrėkite žurnalą žemiau — galbūt nesutampa stulpelių pavadinimai arba antraščių nėra pirmose 15 eilučių.`;
+      status.innerHTML = `<div class="alert ${cls}"><span class="alert-icon">${icon}</span>
+        <div class="alert-body">
+          <div class="alert-title">${titleMsg}</div>
+          ${detailMsg}
+          ${imported > 0 ? `<button class="btn ghost sm" onclick="goTab('register')" style="margin-top:8px">Peržiūrėti registrą →</button>` : ""}
+          <details style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:var(--smaragdas);font-weight:600">Importo žurnalas ▾</summary>
+            <div class="debug-log">${log.join("\n")}</div>
+          </details>
+        </div></div>`;
     } catch(err){
-      status.innerHTML = `<div class="alert error"><span class="alert-icon">❌</span><div class="alert-body"><div class="alert-title">Klaida</div>${err.message}</div></div>`;
+      status.innerHTML = `<div class="alert error"><span class="alert-icon">❌</span><div class="alert-body"><div class="alert-title">Klaida apdorojant failą</div>${err.message}</div></div>`;
+      console.error(err);
     }
   };
   reader.readAsArrayBuffer(f);
 }
 
-/* =========================================================
-   REGISTER (CRUD)
-   ========================================================= */
+/* ==================== REGISTER (CRUD) ==================== */
 function getFilteredProcs(){
   const company = document.getElementById("companyFilter").value;
   const search = (document.getElementById("searchBox")?.value || "").toLowerCase();
@@ -1003,7 +819,6 @@ function renderRegister(){
     wrap.innerHTML = `<div class="empty"><div class="icon">📋</div>Pirkimų sąraše nieko nėra. <br>Importuokite Excel failą iš Doclogix arba pridėkite pirkimą rankiniu būdu.</div>`;
     return;
   }
-  // populate filter dropdown
   const fm = document.getElementById("filterMethod");
   const methods = [...new Set(DATA.procurements.map(p=>p.budas).filter(Boolean))];
   if(fm.options.length <= 1){
@@ -1023,13 +838,13 @@ function renderRegister(){
                    issues.some(i=>i.sev==="err") ? `<span class="badge red">${issues.filter(i=>i.sev==="err").length} klaidos</span>` :
                    `<span class="badge yellow">${issues.length} įsp.</span>`;
     html += `<tr class="${cls}">
-      <td><strong>${p.nr||""}</strong></td>
+      <td><strong>${escapeHtml(p.nr||"")}</strong></td>
       <td><span class="badge gray">${p.imone||"?"}</span></td>
       <td>${escapeHtml(p.objektas||"")}</td>
       <td><strong>${fmtMoney(p.verte||0)}</strong></td>
-      <td>${p.rusis||""}</td>
+      <td>${escapeHtml(p.rusis||"")}</td>
       <td style="font-size:11px">${escapeHtml(p.budas||"")}</td>
-      <td style="font-family:monospace;font-size:11px">${(p.bvpz||"").slice(0,12)}</td>
+      <td style="font-family:monospace;font-size:11px">${escapeHtml(String(p.bvpz||"").slice(0,14))}</td>
       <td>${escapeHtml(p.iniciatorius||"")}</td>
       <td>${fmtIfDate(p.sutarciesData)}</td>
       <td>${fmtIfDate(p.pirkimoData)}</td>
@@ -1046,16 +861,8 @@ function renderRegister(){
   wrap.innerHTML = html;
 }
 
-function fmtIfDate(v){
-  if(!v) return `<span class="muted">—</span>`;
-  const d = parseDate(v);
-  if(d) return fmtDate(d);
-  return String(v).slice(0,10);
-}
-
-function escapeHtml(s){
-  return String(s||"").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-}
+function fmtIfDate(v){ if(!v) return `<span class="muted">—</span>`; const d=parseDate(v); if(d) return fmtDate(d); return String(v).slice(0,10); }
+function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
 function addNewProc(){ openProcModal(null); }
 function editProc(id){ openProcModal(DATA.procurements.find(p=>p.id===id)); }
@@ -1077,7 +884,7 @@ function openProcModal(p){
   m.innerHTML = `
     <h3>${isNew ? "Naujas pirkimas" : "Redaguoti pirkimą"}</h3>
     <div class="form-row">
-      <div><label>Pirkimo poreikio Nr.</label><input id="f_nr" value="${p.nr||""}"></div>
+      <div><label>Pirkimo poreikio Nr.</label><input id="f_nr" value="${escapeHtml(p.nr||"")}"></div>
       <div><label>Įmonė</label><select id="f_imone">${Object.keys(COMPANIES).map(k=>`<option value="${k}" ${p.imone===k?"selected":""}>${COMPANIES[k].name}</option>`).join("")}</select></div>
       <div><label>Pirkimo objekto rūšis</label><select id="f_rusis"><option ${p.rusis==="Prekės"?"selected":""}>Prekės</option><option ${p.rusis==="Paslaugos"?"selected":""}>Paslaugos</option><option ${p.rusis==="Darbai"?"selected":""}>Darbai</option></select></div>
     </div>
@@ -1087,7 +894,7 @@ function openProcModal(p){
     <div class="form-row">
       <div><label>Vertė be PVM (€) *</label><input type="number" id="f_verte" value="${p.verte||0}"></div>
       <div><label>Pirkimo būdas</label><select id="f_budas"><option value="">— pasirinkti —</option>${methodOptions}</select></div>
-      <div><label>BVPŽ pagrindinis</label><input id="f_bvpz" value="${p.bvpz||""}" placeholder="pvz. 30232130-4"></div>
+      <div><label>BVPŽ pagrindinis</label><input id="f_bvpz" value="${escapeHtml(p.bvpz||"")}" placeholder="pvz. 30232130-4"></div>
     </div>
     <div class="form-row">
       <div><label>Iniciatorius</label><input id="f_iniciatorius" value="${escapeHtml(p.iniciatorius||"")}"></div>
@@ -1121,76 +928,56 @@ function openProcModal(p){
   document.getElementById("modal").classList.add("show");
 }
 
-function fmtIfDateRaw(v){
-  if(!v) return "";
-  const d = parseDate(v);
-  return d ? fmtDate(d) : "";
-}
+function fmtIfDateRaw(v){ if(!v) return ""; const d=parseDate(v); return d?fmtDate(d):""; }
 
 function saveProcModal(id, isNew){
   const get = k=>document.getElementById("f_"+k).value;
   const rec = {
-    id: id,
-    nr: get("nr"), imone: get("imone"), rusis: get("rusis"),
-    objektas: get("objektas"), verte: parseFloat(get("verte"))||0,
-    budas: get("budas"), bvpz: get("bvpz"),
-    iniciatorius: get("iniciatorius"), padalinys: get("padalinys"),
-    inicData: get("inicData"), pirkimoData: get("pirkimoData"), sutarciesData: get("sutarciesData"),
-    trukme: parseInt(get("trukme"))||"", cvpis: get("cvpis"), cpo: get("cpo"),
-    valdyba: get("valdyba"), capex: get("capex"), kriterijus: get("kriterijus"),
-    pastabos: get("pastabos")
+    id, nr:get("nr"), imone:get("imone"), rusis:get("rusis"),
+    objektas:get("objektas"), verte:parseFloat(get("verte"))||0,
+    budas:get("budas"), bvpz:get("bvpz"),
+    iniciatorius:get("iniciatorius"), padalinys:get("padalinys"),
+    inicData:get("inicData"), pirkimoData:get("pirkimoData"), sutarciesData:get("sutarciesData"),
+    trukme:parseInt(get("trukme"))||"", cvpis:get("cvpis"), cpo:get("cpo"),
+    valdyba:get("valdyba"), capex:get("capex"), kriterijus:get("kriterijus"), pastabos:get("pastabos")
   };
-  if(isNew){
-    DATA.procurements.push(rec);
-  } else {
-    const i = DATA.procurements.findIndex(p=>p.id===id);
-    if(i>=0) DATA.procurements[i] = {...DATA.procurements[i], ...rec};
-    else DATA.procurements.push(rec);
-  }
+  if(isNew){ DATA.procurements.push(rec); }
+  else { const i=DATA.procurements.findIndex(p=>p.id===id); if(i>=0) DATA.procurements[i]={...DATA.procurements[i],...rec}; else DATA.procurements.push(rec); }
   save(); closeModal(); renderRegister(); renderDashboard();
 }
 
 function closeModal(){ document.getElementById("modal").classList.remove("show"); }
 
 function recalcAll(){
-  let updated = 0;
+  let updated=0;
   DATA.procurements.forEach(p=>{
     if(!p.sutarciesData || !p.budas) return;
-    const code = mapMethodNameToCode(p.budas);
-    if(!code) return;
-    const m = METHODS[code];
-    const dC = parseDate(p.sutarciesData);
-    if(!dC) return;
-    p.pirkimoData = fmtDate(addWorkdays(dC, -m.exec));
-    p.inicData = fmtDate(addWorkdays(dC, -m.total));
+    const code=mapMethodNameToCode(p.budas); if(!code) return;
+    const m=METHODS[code]; const dC=parseDate(p.sutarciesData); if(!dC) return;
+    p.pirkimoData=fmtDate(addWorkdays(dC, -m.exec));
+    p.inicData=fmtDate(addWorkdays(dC, -m.total));
     updated++;
   });
   save(); renderRegister();
   alert(`Perskaičiuotos datos: ${updated} pirkimuose.`);
 }
 
-/* =========================================================
-   VALIDATION VIEW
-   ========================================================= */
+/* ==================== VALIDATION VIEW ==================== */
 function renderValidation(){
   const procs = getFilteredProcs();
   let ok=0, warn=0, err=0;
-  const items = [];
+  const items=[];
   procs.forEach(p=>{
-    const issues = validateProc(p);
-    if(issues.length === 0) ok++;
+    const issues=validateProc(p);
+    if(issues.length===0) ok++;
     else if(issues.some(i=>i.sev==="err")){ err++; items.push({p, issues}); }
     else { warn++; items.push({p, issues}); }
   });
   document.getElementById("vOK").textContent = ok;
   document.getElementById("vWarn").textContent = warn;
   document.getElementById("vErr").textContent = err;
-
   const list = document.getElementById("validationList");
-  if(items.length === 0){
-    list.innerHTML = `<div class="empty"><div class="icon">✅</div>Visi pirkimai atitinka taisykles. Puiku!</div>`;
-    return;
-  }
+  if(items.length===0){ list.innerHTML=`<div class="empty"><div class="icon">✅</div>Visi pirkimai atitinka taisykles. Puiku!</div>`; return; }
   list.innerHTML = items.map(({p,issues})=>`
     <div class="alert ${issues.some(i=>i.sev==='err')?'error':'warn'}">
       <span class="alert-icon">${issues.some(i=>i.sev==='err')?'❌':'⚠️'}</span>
@@ -1204,446 +991,265 @@ function renderValidation(){
     </div>`).join("");
 }
 
-/* =========================================================
-   METHOD VIEW
-   ========================================================= */
+/* ==================== METHOD VIEW ==================== */
 function runMethodTest(){
-  const v = parseFloat(document.getElementById("qtValue").value)||0;
-  const t = document.getElementById("qtType").value;
-  const law = document.getElementById("qtLaw").value;
-  const sp = document.getElementById("qtSpec").value === "1";
-  const r = recommendMethod(v, t, law, sp);
-  const m = METHODS[r.recommended];
+  const v=parseFloat(document.getElementById("qtValue").value)||0;
+  const t=document.getElementById("qtType").value;
+  const law=document.getElementById("qtLaw").value;
+  const sp=document.getElementById("qtSpec").value==="1";
+  const r=recommendMethod(v,t,law,sp);
+  const m=METHODS[r.recommended];
   document.getElementById("methodResult").innerHTML = `
-    <div class="alert">
-      <span class="alert-icon">⚖️</span>
+    <div class="alert"><span class="alert-icon">⚖️</span>
       <div class="alert-body">
         <div class="alert-title">Rekomenduojama: <span class="badge green">${r.recommended} — ${m?m.name:""}</span> · Kategorija: ${r.category}</div>
         <p style="margin:8px 0">${r.reason}</p>
         <div class="grid grid-3" style="margin-top:8px">
           <div class="kpi cool"><span class="kpi-label">Tarpt. riba</span><span class="kpi-value" style="font-size:18px">${fmtMoney(r.intlThreshold)}</span></div>
           <div class="kpi"><span class="kpi-label">MV riba</span><span class="kpi-value" style="font-size:18px">${fmtMoney(r.mvThreshold)}</span></div>
-          ${m ? `<div class="kpi warn"><span class="kpi-label">Procedūros trukmė</span><span class="kpi-value" style="font-size:18px">${m.total} d.d.</span><span class="kpi-sub">${m.prep}+${m.exec} d.d.</span></div>` : ""}
+          ${m?`<div class="kpi warn"><span class="kpi-label">Procedūros trukmė</span><span class="kpi-value" style="font-size:18px">${m.total} d.d.</span><span class="kpi-sub">${m.prep}+${m.exec} d.d.</span></div>`:""}
         </div>
-        ${r.rule20.applies ? `<div class="hint" style="margin-top:10px">📌 ${r.rule20.note}</div>` : ""}
-      </div>
-    </div>`;
+        ${r.rule20.applies?`<div class="hint" style="margin-top:10px">📌 ${r.rule20.note}</div>`:""}
+      </div></div>`;
 }
 
 function renderMethodAudit(){
-  const procs = getFilteredProcs();
-  if(!procs.length){
-    document.getElementById("methodAudit").innerHTML = `<div class="empty"><div class="icon">⚖️</div>Nėra pirkimų analizei. Importuokite duomenis arba pridėkite rankiniu būdu.</div>`;
-    return;
-  }
-  let html = `<div class="table-wrap"><table>
+  const procs=getFilteredProcs();
+  if(!procs.length){ document.getElementById("methodAudit").innerHTML=`<div class="empty"><div class="icon">⚖️</div>Nėra pirkimų analizei.</div>`; return; }
+  let html=`<div class="table-wrap"><table>
     <thead><tr><th>Nr.</th><th>Objektas</th><th>Vertė</th><th>Rūšis</th><th>Pasirinkta</th><th>Rekomenduojama</th><th>Statusas</th></tr></thead><tbody>`;
   procs.forEach(p=>{
-    const company = COMPANIES[p.imone] || COMPANIES["EPSO-G"];
-    const r = recommendMethod(p.verte||0, p.rusis||"Paslaugos", company.law, false);
-    const chosen = mapMethodNameToCode(p.budas);
-    const recCat = r.category === "Tarptautinis" ? "t" : r.category === "Supaprastintas" ? "s" : "mv";
-    const chosenCat = chosen ? METHODS[chosen]?.cat : null;
-    const match = chosenCat === recCat || chosenCat === "cpo";
-    const cls = match ? "" : "flagged";
-    html += `<tr class="${cls}">
+    const company=COMPANIES[p.imone]||COMPANIES["EPSO-G"];
+    const r=recommendMethod(p.verte||0, p.rusis||"Paslaugos", company.law, false);
+    const chosen=mapMethodNameToCode(p.budas);
+    const recCat=r.category==="Tarptautinis"?"t":r.category==="Supaprastintas"?"s":"mv";
+    const chosenCat=chosen?METHODS[chosen]?.cat:null;
+    const match=chosenCat===recCat||chosenCat==="cpo";
+    const cls=match?"":"flagged";
+    html+=`<tr class="${cls}">
       <td>${escapeHtml(p.nr||"")}</td>
       <td>${escapeHtml((p.objektas||"").slice(0,60))}</td>
       <td><strong>${fmtMoney(p.verte||0)}</strong></td>
-      <td>${p.rusis||""}</td>
+      <td>${escapeHtml(p.rusis||"")}</td>
       <td><span class="badge ${match?'green':'yellow'}">${chosen||"?"}</span></td>
       <td><span class="badge blue">${r.recommended}</span></td>
-      <td>${match ? '✓ atitinka' : '⚠ rekomenduojama keisti'}</td>
+      <td>${match?'✓ atitinka':'⚠ rekomenduojama keisti'}</td>
     </tr>`;
   });
-  html += `</tbody></table></div>`;
-  document.getElementById("methodAudit").innerHTML = html;
+  html+=`</tbody></table></div>`;
+  document.getElementById("methodAudit").innerHTML=html;
 }
 
-/* =========================================================
-   DURATION
-   ========================================================= */
+/* ==================== DURATION ==================== */
 function populateDurationOptions(){
-  const sel = document.getElementById("durMethod");
-  if(sel.options.length > 1) return;
+  const sel=document.getElementById("durMethod");
+  if(sel.options.length>1) return;
   Object.entries(METHODS).forEach(([k,v])=>{
-    const o = document.createElement("option");
-    o.value = k; o.textContent = `${k} — ${v.name} (${v.total} d.d.)`;
+    const o=document.createElement("option");
+    o.value=k; o.textContent=`${k} — ${v.name} (${v.total} d.d.)`;
     sel.appendChild(o);
   });
-  // catalog
-  const tbody = document.querySelector("#methodCatalog tbody");
-  tbody.innerHTML = Object.entries(METHODS).map(([k,v])=>`
-    <tr>
-      <td><strong style="color:var(--smaragdas)">${k}</strong></td>
-      <td>${v.full}</td>
-      <td style="text-align:center">${v.prep}</td>
-      <td style="text-align:center">${v.exec}</td>
-      <td style="text-align:center"><strong>${v.total}</strong></td>
-    </tr>`).join("");
+  const tbody=document.querySelector("#methodCatalog tbody");
+  tbody.innerHTML=Object.entries(METHODS).map(([k,v])=>`
+    <tr><td><strong style="color:var(--smaragdas)">${k}</strong></td><td>${v.full}</td>
+    <td style="text-align:center">${v.prep}</td><td style="text-align:center">${v.exec}</td>
+    <td style="text-align:center"><strong>${v.total}</strong></td></tr>`).join("");
 }
 
 function runDuration(){
-  const code = document.getElementById("durMethod").value;
-  const type = document.getElementById("durType").value;
-  const dC = parseDate(document.getElementById("durContract").value);
-  if(!code || !dC){ alert("Pasirinkite pirkimo būdą ir sutarties datą"); return; }
-  const m = METHODS[code];
-  const factor = type === "B" ? 1.2 : 1;
-  const exec = Math.ceil(m.exec * factor);
-  const prep = Math.ceil(m.prep * factor);
-  const total = exec + prep;
-
-  const dProc = addWorkdays(dC, -exec);
-  const dInit = addWorkdays(dC, -total);
-
+  const code=document.getElementById("durMethod").value;
+  const type=document.getElementById("durType").value;
+  const dC=parseDate(document.getElementById("durContract").value);
+  if(!code||!dC){ alert("Pasirinkite pirkimo būdą ir sutarties datą"); return; }
+  const m=METHODS[code];
+  const factor=type==="B"?1.2:1;
+  const exec=Math.ceil(m.exec*factor);
+  const prep=Math.ceil(m.prep*factor);
+  const total=exec+prep;
+  const dProc=addWorkdays(dC, -exec);
+  const dInit=addWorkdays(dC, -total);
   document.getElementById("durResult").innerHTML = `
-    <div class="alert">
-      <span class="alert-icon">⏱️</span>
+    <div class="alert"><span class="alert-icon">⏱️</span>
       <div class="alert-body">
         <div class="alert-title">${m.full} · Grafikas ${type}</div>
         <div class="timeline" style="margin-top:10px">
-          <div class="timeline-row">
-            <div><strong>Inicijavimas</strong></div>
-            <div>${fmtDate(dInit)}</div>
-            <div class="timeline-bar prep" style="width:${(prep/total*100).toFixed(0)}%">Pasirengimas ${prep} d.d.</div>
-            <div class="muted">${prep} d.d.</div>
-          </div>
-          <div class="timeline-row">
-            <div><strong>Pirkimo pradžia</strong></div>
-            <div>${fmtDate(dProc)}</div>
-            <div class="timeline-bar exec" style="width:100%">Procedūra ${exec} d.d.</div>
-            <div class="muted">${exec} d.d.</div>
-          </div>
-          <div class="timeline-row">
-            <div><strong>Sutarties data</strong></div>
-            <div>${fmtDate(dC)}</div>
-            <div></div><div></div>
-          </div>
+          <div class="timeline-row"><div><strong>Inicijavimas</strong></div><div>${fmtDate(dInit)}</div><div class="timeline-bar prep" style="width:${(prep/total*100).toFixed(0)}%">Pasirengimas ${prep} d.d.</div><div class="muted">${prep} d.d.</div></div>
+          <div class="timeline-row"><div><strong>Pirkimo pradžia</strong></div><div>${fmtDate(dProc)}</div><div class="timeline-bar exec" style="width:100%">Procedūra ${exec} d.d.</div><div class="muted">${exec} d.d.</div></div>
+          <div class="timeline-row"><div><strong>Sutarties data</strong></div><div>${fmtDate(dC)}</div><div></div><div></div></div>
         </div>
         <div class="grid grid-3" style="margin-top:12px">
           <div class="kpi"><span class="kpi-label">Iniciatoriaus terminas</span><span class="kpi-value" style="font-size:18px">${fmtDate(dInit)}</span></div>
           <div class="kpi cool"><span class="kpi-label">Pirkimo pradžia</span><span class="kpi-value" style="font-size:18px">${fmtDate(dProc)}</span></div>
           <div class="kpi warn"><span class="kpi-label">Bendra trukmė</span><span class="kpi-value" style="font-size:18px">${total} d.d.</span></div>
         </div>
-      </div>
-    </div>`;
+      </div></div>`;
 }
 
-/* =========================================================
-   CENTRALIZATION AI
-   ========================================================= */
+/* ==================== CENTRALIZATION ==================== */
 function runCentralAnalysis(){
-  if(DATA.procurements.length === 0){
-    document.getElementById("centralResult").innerHTML = `<div class="empty"><div class="icon">🤝</div>Nėra duomenų. Įkelkite bent vienos įmonės pirkimų planą.</div>`;
+  if(DATA.procurements.length===0){
+    document.getElementById("centralResult").innerHTML=`<div class="empty"><div class="icon">🤝</div>Nėra duomenų.</div>`;
     return;
   }
-
-  // Group by CPV3 (first 3 digits of BVPŽ)
-  const groups = {};
+  const groups={};
   DATA.procurements.forEach(p=>{
     if(!p.bvpz) return;
-    const cpv3 = String(p.bvpz).replace(/\D/g,"").slice(0,3);
+    const cpv3=String(p.bvpz).replace(/\D/g,"").slice(0,3);
     if(!cpv3) return;
-    if(!groups[cpv3]) groups[cpv3] = {cpv3, items:[], companies:new Set()};
+    if(!groups[cpv3]) groups[cpv3]={cpv3, items:[], companies:new Set()};
     groups[cpv3].items.push(p);
-    groups[cpv3].companies.add(p.imone || "?");
+    groups[cpv3].companies.add(p.imone||"?");
   });
-
-  const candidates = Object.values(groups)
+  const candidates=Object.values(groups)
     .filter(g => g.companies.size >= 2 || g.items.length >= 2)
-    .map(g => {
-      const totalValue = g.items.reduce((s,p)=>s+(p.verte||0), 0);
-      const avgValue = totalValue / g.items.length;
-      const dates = g.items.map(p=>parseDate(p.sutarciesData)).filter(Boolean);
-      let timeAlign = "n/a";
-      if(dates.length >= 2){
-        const span = Math.abs((Math.max(...dates) - Math.min(...dates))/(86400000));
-        timeAlign = span <= 90 ? "stiprus" : span <= 180 ? "vidutinis" : "silpnas";
+    .map(g=>{
+      const totalValue=g.items.reduce((s,p)=>s+(p.verte||0),0);
+      const dates=g.items.map(p=>parseDate(p.sutarciesData)).filter(Boolean);
+      let timeAlign="n/a";
+      if(dates.length>=2){
+        const span=Math.abs((Math.max(...dates)-Math.min(...dates))/86400000);
+        timeAlign=span<=90?"stiprus":span<=180?"vidutinis":"silpnas";
       }
-      // Synergy estimate
-      const compCount = g.companies.size;
-      const itemCount = g.items.length;
-      let synergyPct = 5;
-      if(compCount >= 3 && itemCount >= 4) synergyPct = 25;
-      else if(compCount >= 2 && itemCount >= 3) synergyPct = 15;
-      else if(compCount >= 2) synergyPct = 10;
-      if(timeAlign === "stiprus") synergyPct += 5;
-      const savings = Math.round(totalValue * synergyPct / 100);
-
-      return {
-        cpv3: g.cpv3,
-        items: g.items,
-        companies: [...g.companies],
-        totalValue, avgValue, timeAlign, synergyPct, savings,
-        score: compCount * 10 + itemCount * 3 + (timeAlign==="stiprus"?20:timeAlign==="vidutinis"?10:0) + Math.log10(totalValue+1)*2
-      };
+      const cc=g.companies.size, ic=g.items.length;
+      let synergyPct=5;
+      if(cc>=3&&ic>=4) synergyPct=25;
+      else if(cc>=2&&ic>=3) synergyPct=15;
+      else if(cc>=2) synergyPct=10;
+      if(timeAlign==="stiprus") synergyPct+=5;
+      const savings=Math.round(totalValue*synergyPct/100);
+      return {cpv3:g.cpv3, items:g.items, companies:[...g.companies], totalValue, timeAlign, synergyPct, savings,
+              score: cc*10 + ic*3 + (timeAlign==="stiprus"?20:timeAlign==="vidutinis"?10:0) + Math.log10(totalValue+1)*2};
     })
-    .sort((a,b)=>b.score - a.score);
-
-  document.getElementById("kpiCentral").textContent = candidates.length;
-
-  if(candidates.length === 0){
-    document.getElementById("centralResult").innerHTML = `<div class="empty"><div class="icon">🤝</div>Centralizavimo kandidatų neaptikta. Bent 2 įmonės turėtų turėti pirkimų pagal tą pačią CPV3 grupę.</div>`;
+    .sort((a,b)=>b.score-a.score);
+  document.getElementById("kpiCentral").textContent=candidates.length;
+  if(candidates.length===0){
+    document.getElementById("centralResult").innerHTML=`<div class="empty"><div class="icon">🤝</div>Centralizavimo kandidatų neaptikta. Bent 2 įmonės turėtų turėti pirkimų pagal tą pačią CPV3 grupę.</div>`;
     return;
   }
-
-  let html = `<div class="alert info"><span class="alert-icon">🤝</span><div class="alert-body"><div class="alert-title">Aptikti ${candidates.length} centralizavimo kandidatai</div>Bendra galima sutaupyti suma: <strong>${fmtMoney(candidates.reduce((s,c)=>s+c.savings,0))}</strong></div></div>`;
-
-  candidates.slice(0, 12).forEach((c, idx) => {
-    const recColor = c.synergyPct >= 20 ? "green" : c.synergyPct >= 12 ? "yellow" : "gray";
-    html += `
-      <div class="card" style="margin-bottom:10px">
-        <div class="split">
-          <h4 style="margin:0">CPV ${c.cpv3} · ${c.items.length} pirkimai · ${c.companies.length} įmonės</h4>
-          <span class="badge ${recColor}">Sinergija ${c.synergyPct}%</span>
-          <span class="badge blue">Datų derinimas: ${c.timeAlign}</span>
-          <div class="split-end">
-            <strong>${fmtMoney(c.totalValue)}</strong> · galima sutaupyti ~${fmtMoney(c.savings)}
-          </div>
-        </div>
-        <div class="progress"><div style="width:${c.synergyPct*4}%"></div></div>
-        <div style="margin-top:10px">
-          ${c.companies.map(co=>`<span class="badge gray" style="margin-right:4px">${co}</span>`).join("")}
-        </div>
-        <details style="margin-top:10px">
-          <summary style="cursor:pointer;font-size:12px;color:var(--smaragdas);font-weight:600">Peržiūrėti pirkimų sąrašą (${c.items.length}) ▾</summary>
-          <table style="margin-top:10px;min-width:auto;font-size:11.5px">
-            <thead><tr><th>Įmonė</th><th>Nr.</th><th>Objektas</th><th>Vertė</th><th>BVPŽ</th><th>Sutartis iki</th></tr></thead>
-            <tbody>${c.items.map(p=>`<tr>
-              <td><span class="badge gray">${p.imone||"?"}</span></td>
-              <td>${escapeHtml(p.nr||"")}</td>
-              <td>${escapeHtml((p.objektas||"").slice(0,60))}</td>
-              <td>${fmtMoney(p.verte||0)}</td>
-              <td style="font-family:monospace">${(p.bvpz||"").slice(0,12)}</td>
-              <td>${fmtIfDate(p.sutarciesData)}</td>
-            </tr>`).join("")}</tbody>
-          </table>
-        </details>
-        <div class="hint" style="margin-top:10px">
-          💡 <strong>Rekomendacija:</strong>
-          ${c.synergyPct >= 20 ? "Stipri centralizavimo galimybė. Siūloma organizuoti centralizuotą EPSO-G grupės lygmens pirkimą." :
-            c.synergyPct >= 12 ? "Vidutinė centralizavimo galimybė. Apsvarstykite preliminarią sutartį arba CPO sprendimą." :
-            "Maža sinergija — verta apjungti tik tuo atveju, jei pirkimai panašūs technikiškai."}
-        </div>
-      </div>`;
+  let html=`<div class="alert info"><span class="alert-icon">🤝</span><div class="alert-body"><div class="alert-title">Aptikti ${candidates.length} centralizavimo kandidatai</div>Bendra galima sutaupyti suma: <strong>${fmtMoney(candidates.reduce((s,c)=>s+c.savings,0))}</strong></div></div>`;
+  candidates.slice(0,12).forEach(c=>{
+    const recColor=c.synergyPct>=20?"green":c.synergyPct>=12?"yellow":"gray";
+    html+=`<div class="card" style="margin-bottom:10px">
+      <div class="split"><h4 style="margin:0">CPV ${c.cpv3} · ${c.items.length} pirkimai · ${c.companies.length} įmonės</h4>
+        <span class="badge ${recColor}">Sinergija ${c.synergyPct}%</span>
+        <span class="badge blue">Datų derinimas: ${c.timeAlign}</span>
+        <div class="split-end"><strong>${fmtMoney(c.totalValue)}</strong> · galima sutaupyti ~${fmtMoney(c.savings)}</div>
+      </div>
+      <div class="progress"><div style="width:${Math.min(100,c.synergyPct*4)}%"></div></div>
+      <div style="margin-top:10px">${c.companies.map(co=>`<span class="badge gray" style="margin-right:4px">${co}</span>`).join("")}</div>
+      <details style="margin-top:10px"><summary style="cursor:pointer;font-size:12px;color:var(--smaragdas);font-weight:600">Peržiūrėti pirkimų sąrašą (${c.items.length}) ▾</summary>
+        <table style="margin-top:10px;min-width:auto;font-size:11.5px">
+          <thead><tr><th>Įmonė</th><th>Nr.</th><th>Objektas</th><th>Vertė</th><th>BVPŽ</th><th>Sutartis iki</th></tr></thead>
+          <tbody>${c.items.map(p=>`<tr><td><span class="badge gray">${p.imone||"?"}</span></td><td>${escapeHtml(p.nr||"")}</td><td>${escapeHtml((p.objektas||"").slice(0,60))}</td><td>${fmtMoney(p.verte||0)}</td><td style="font-family:monospace">${escapeHtml(String(p.bvpz||"").slice(0,14))}</td><td>${fmtIfDate(p.sutarciesData)}</td></tr>`).join("")}</tbody>
+        </table>
+      </details>
+      <div class="hint" style="margin-top:10px">💡 <strong>Rekomendacija:</strong> ${c.synergyPct>=20?"Stipri centralizavimo galimybė. Siūloma organizuoti centralizuotą EPSO-G grupės lygmens pirkimą.":c.synergyPct>=12?"Vidutinė centralizavimo galimybė. Apsvarstykite preliminarią sutartį arba CPO sprendimą.":"Maža sinergija — verta apjungti tik tuo atveju, jei pirkimai panašūs technikiškai."}</div>
+    </div>`;
   });
-
-  document.getElementById("centralResult").innerHTML = html;
+  document.getElementById("centralResult").innerHTML=html;
 }
 
-/* =========================================================
-   DASHBOARD CHARTS
-   ========================================================= */
+/* ==================== DASHBOARD ==================== */
 let chartCo, chartTy, chartMe;
 function renderDashboard(){
-  const procs = getFilteredProcs();
-  document.getElementById("kpiCount").textContent = procs.length;
-  document.getElementById("kpiValue").textContent = fmtMoney(procs.reduce((s,p)=>s+(p.verte||0),0));
-
-  let flagCount = 0;
-  procs.forEach(p=>{ if(validateProc(p).length) flagCount++; });
-  document.getElementById("kpiFlags").textContent = flagCount;
-
-  // by company
-  const byCompany = {};
-  DATA.procurements.forEach(p=>{ byCompany[p.imone||"?"] = (byCompany[p.imone||"?"]||0) + (p.verte||0); });
-  const byType = {};
-  procs.forEach(p=>{ byType[p.rusis||"?"] = (byType[p.rusis||"?"]||0) + 1; });
-  const byMethod = {};
-  procs.forEach(p=>{ const k = mapMethodNameToCode(p.budas)||"?"; byMethod[k] = (byMethod[k]||0) + (p.verte||0); });
-
-  const opts = {responsive:true, plugins:{legend:{position:"bottom",labels:{font:{family:"Nunito Sans"}}}}};
-
+  const procs=getFilteredProcs();
+  document.getElementById("kpiCount").textContent=procs.length;
+  document.getElementById("kpiValue").textContent=fmtMoney(procs.reduce((s,p)=>s+(p.verte||0),0));
+  let flagCount=0; procs.forEach(p=>{ if(validateProc(p).length) flagCount++; });
+  document.getElementById("kpiFlags").textContent=flagCount;
+  const byCompany={}; DATA.procurements.forEach(p=>{ byCompany[p.imone||"?"]=(byCompany[p.imone||"?"]||0)+(p.verte||0); });
+  const byType={}; procs.forEach(p=>{ byType[p.rusis||"?"]=(byType[p.rusis||"?"]||0)+1; });
+  const byMethod={}; procs.forEach(p=>{ const k=mapMethodNameToCode(p.budas)||"?"; byMethod[k]=(byMethod[k]||0)+(p.verte||0); });
+  const opts={responsive:true, plugins:{legend:{position:"bottom",labels:{font:{family:"Nunito Sans"}}}}};
   if(chartCo) chartCo.destroy();
-  chartCo = new Chart(document.getElementById("chartByCompany"),{
-    type:"doughnut",
-    data:{
-      labels: Object.keys(byCompany).map(k=>COMPANIES[k]?.name||k),
-      datasets:[{data:Object.values(byCompany), backgroundColor:Object.keys(byCompany).map(k=>COMPANIES[k]?.color||"#999")}]
-    },
-    options: opts
-  });
+  chartCo=new Chart(document.getElementById("chartByCompany"),{type:"doughnut",
+    data:{labels:Object.keys(byCompany).map(k=>COMPANIES[k]?.name||k),datasets:[{data:Object.values(byCompany),backgroundColor:Object.keys(byCompany).map(k=>COMPANIES[k]?.color||"#999")}]},
+    options:opts});
   if(chartTy) chartTy.destroy();
-  chartTy = new Chart(document.getElementById("chartByType"),{
-    type:"pie",
+  chartTy=new Chart(document.getElementById("chartByType"),{type:"pie",
     data:{labels:Object.keys(byType),datasets:[{data:Object.values(byType),backgroundColor:["#00a072","#00667d","#fab03b","#737483"]}]},
-    options: opts
-  });
+    options:opts});
   if(chartMe) chartMe.destroy();
-  chartMe = new Chart(document.getElementById("chartByMethod"),{
-    type:"bar",
-    data:{labels:Object.keys(byMethod), datasets:[{label:"Vertė €",data:Object.values(byMethod), backgroundColor:"#00a072", borderRadius:6}]},
-    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmtMoney(v)}}}}
-  });
+  chartMe=new Chart(document.getElementById("chartByMethod"),{type:"bar",
+    data:{labels:Object.keys(byMethod),datasets:[{label:"Vertė €",data:Object.values(byMethod),backgroundColor:"#00a072",borderRadius:6}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmtMoney(v)}}}}});
 }
 
-/* =========================================================
-   EXPORTS
-   ========================================================= */
+/* ==================== EXPORTS ==================== */
 function exportExcel(){
-  const filter = document.getElementById("exportCompany").value;
-  const include = document.getElementById("exportInclude").value;
-  const wb = XLSX.utils.book_new();
-
-  const companies = filter === "ALL" ? Object.keys(COMPANIES) : [filter];
-  companies.forEach(co => {
-    const procs = DATA.procurements.filter(p => p.imone === co);
+  const filter=document.getElementById("exportCompany").value;
+  const include=document.getElementById("exportInclude").value;
+  const wb=XLSX.utils.book_new();
+  const companies=filter==="ALL"?Object.keys(COMPANIES):[filter];
+  companies.forEach(co=>{
+    const procs=DATA.procurements.filter(p=>p.imone===co);
     if(!procs.length) return;
-    const rows = procs.map(p=>({
-      "Nr.": p.nr || "",
-      "Įmonė": p.imone || "",
-      "Pirkimo objektas": p.objektas || "",
-      "Vertė be PVM": p.verte || 0,
-      "Rūšis": p.rusis || "",
-      "Pirkimo būdas": p.budas || "",
-      "BVPŽ": p.bvpz || "",
-      "Iniciatorius": p.iniciatorius || "",
-      "Padalinys": p.padalinys || "",
-      "Inicijavimo data": p.inicData || "",
-      "Pirkimo data": p.pirkimoData || "",
-      "Sutarties data": p.sutarciesData || "",
-      "Trukmė (mėn.)": p.trukme || "",
-      "Per CVPIS": p.cvpis || "",
-      "Per CPO": p.cpo || "",
-      "Valdybos pritarimas": p.valdyba || "",
-      "CAPEX/OPEX": p.capex || "",
-      "Kriterijus": p.kriterijus || "",
-      "Pastabos": p.pastabos || ""
+    const rows=procs.map(p=>({
+      "Nr.":p.nr||"", "Įmonė":p.imone||"", "Pirkimo objektas":p.objektas||"",
+      "Vertė be PVM":p.verte||0, "Rūšis":p.rusis||"", "Pirkimo būdas":p.budas||"",
+      "BVPŽ":p.bvpz||"", "Iniciatorius":p.iniciatorius||"", "Padalinys":p.padalinys||"",
+      "Inicijavimo data":p.inicData||"", "Pirkimo data":p.pirkimoData||"", "Sutarties data":p.sutarciesData||"",
+      "Trukmė (mėn.)":p.trukme||"", "Per CVPIS":p.cvpis||"", "Per CPO":p.cpo||"",
+      "Valdybos pritarimas":p.valdyba||"", "CAPEX/OPEX":p.capex||"", "Kriterijus":p.kriterijus||"", "Pastabos":p.pastabos||""
     }));
-    const ws = XLSX.utils.json_to_sheet(rows);
-    XLSX.utils.book_append_sheet(wb, ws, co.slice(0,30));
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), co.slice(0,30));
   });
-
-  // Summary sheet
-  const summary = Object.keys(COMPANIES).map(co => {
-    const ps = DATA.procurements.filter(p=>p.imone===co);
-    return {
-      "Įmonė": COMPANIES[co].name,
-      "Pirkimų skaičius": ps.length,
-      "Bendra vertė €": ps.reduce((s,p)=>s+(p.verte||0),0),
-      "Tarptautinių": ps.filter(p=>(mapMethodNameToCode(p.budas)||"").startsWith("T")).length,
-      "Mažos vertės": ps.filter(p=>(mapMethodNameToCode(p.budas)||"").startsWith("MV")).length
-    };
+  const summary=Object.keys(COMPANIES).map(co=>{
+    const ps=DATA.procurements.filter(p=>p.imone===co);
+    return {"Įmonė":COMPANIES[co].name, "Pirkimų skaičius":ps.length,
+      "Bendra vertė €":ps.reduce((s,p)=>s+(p.verte||0),0),
+      "Tarptautinių":ps.filter(p=>(mapMethodNameToCode(p.budas)||"").startsWith("T")).length,
+      "Mažos vertės":ps.filter(p=>(mapMethodNameToCode(p.budas)||"").startsWith("MV")).length};
   });
-  const wsSum = XLSX.utils.json_to_sheet(summary);
-  XLSX.utils.book_append_sheet(wb, wsSum, "Suvestinė");
-
-  if(include === "full"){
-    // Validation sheet
-    const validations = [];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(summary), "Suvestinė");
+  if(include==="full"){
+    const validations=[];
     DATA.procurements.forEach(p=>{
-      const issues = validateProc(p);
-      issues.forEach(i=>validations.push({
-        "Pirkimas": p.nr || p.id, "Įmonė": p.imone, "Objektas": p.objektas,
-        "Lygis": i.sev === "err" ? "Klaida" : "Įspėjimas", "Aprašymas": i.msg
-      }));
+      validateProc(p).forEach(i=>validations.push({"Pirkimas":p.nr||p.id, "Įmonė":p.imone, "Objektas":p.objektas, "Lygis":i.sev==="err"?"Klaida":"Įspėjimas", "Aprašymas":i.msg}));
     });
-    if(validations.length){
-      const wsV = XLSX.utils.json_to_sheet(validations);
-      XLSX.utils.book_append_sheet(wb, wsV, "Validacija");
-    }
+    if(validations.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(validations), "Validacija");
   }
-
   XLSX.writeFile(wb, `EPSO-G_MPP_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
 function exportPdf(){
-  const type = document.getElementById("exportPdfType").value;
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({orientation:"landscape"});
-  const today = new Date().toISOString().slice(0,10);
-
-  // Header
-  doc.setFillColor(0, 160, 114);
-  doc.rect(0, 0, 297, 18, "F");
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(14); doc.setFont("helvetica","bold");
-  doc.text("EPSO-G grupės pirkimų planavimas", 14, 11);
-  doc.setFontSize(9); doc.setFont("helvetica","normal");
-  doc.text(today, 270, 11);
+  const type=document.getElementById("exportPdfType").value;
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"landscape"});
+  const today=new Date().toISOString().slice(0,10);
+  doc.setFillColor(0,160,114); doc.rect(0,0,297,18,"F");
+  doc.setTextColor(255,255,255); doc.setFontSize(14); doc.setFont("helvetica","bold");
+  doc.text("EPSO-G grupes pirkimu planavimas",14,11);
+  doc.setFontSize(9); doc.setFont("helvetica","normal"); doc.text(today,270,11);
   doc.setTextColor(46,54,65);
-
-  if(type === "summary"){
+  if(type==="summary"){
     doc.setFontSize(16); doc.setFont("helvetica","bold");
-    doc.text("Vykdomoji santrauka", 14, 30);
-    doc.setFontSize(10); doc.setFont("helvetica","normal");
-    const totals = Object.keys(COMPANIES).map(co => {
-      const ps = DATA.procurements.filter(p=>p.imone===co);
-      return [COMPANIES[co].name, ps.length, fmtMoney(ps.reduce((s,p)=>s+(p.verte||0),0))];
-    });
-    doc.autoTable({
-      startY: 36,
-      head: [["Įmonė","Pirkimų sk.","Bendra vertė"]],
-      body: totals,
-      headStyles:{fillColor:[0,160,114],textColor:255},
-      styles:{font:"helvetica",fontSize:10}
-    });
-    const total = DATA.procurements.reduce((s,p)=>s+(p.verte||0),0);
+    doc.text("Vykdomoji santrauka",14,30);
+    const totals=Object.keys(COMPANIES).map(co=>{ const ps=DATA.procurements.filter(p=>p.imone===co); return [COMPANIES[co].name, ps.length, fmtMoney(ps.reduce((s,p)=>s+(p.verte||0),0))]; });
+    doc.autoTable({startY:36, head:[["Imone","Pirkimu sk.","Bendra verte"]], body:totals, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:10}});
+    const total=DATA.procurements.reduce((s,p)=>s+(p.verte||0),0);
     doc.setFontSize(11); doc.setFont("helvetica","bold");
-    doc.text(`Bendra plano vertė: ${fmtMoney(total)}`, 14, doc.lastAutoTable.finalY + 12);
-    doc.text(`Pirkimų iš viso: ${DATA.procurements.length}`, 14, doc.lastAutoTable.finalY + 20);
+    doc.text(`Bendra plano verte: ${fmtMoney(total)}`,14,doc.lastAutoTable.finalY+12);
+    doc.text(`Pirkimu is viso: ${DATA.procurements.length}`,14,doc.lastAutoTable.finalY+20);
   }
-
-  if(type === "full"){
-    doc.setFontSize(14); doc.setFont("helvetica","bold");
-    doc.text("Pilnas pirkimų sąrašas", 14, 30);
-    const rows = DATA.procurements.map(p=>[
-      p.nr||"", p.imone||"", (p.objektas||"").slice(0,40),
-      fmtMoney(p.verte||0), p.rusis||"", (p.budas||"").slice(0,30),
-      p.sutarciesData?String(p.sutarciesData).slice(0,10):""
-    ]);
-    doc.autoTable({
-      startY: 36, head:[["Nr.","Įmonė","Objektas","Vertė","Rūšis","Būdas","Sutartis"]],
-      body:rows, headStyles:{fillColor:[0,160,114],textColor:255},
-      styles:{font:"helvetica",fontSize:8}
-    });
+  if(type==="full"){
+    doc.setFontSize(14); doc.setFont("helvetica","bold"); doc.text("Pilnas pirkimu sarasas",14,30);
+    const rows=DATA.procurements.map(p=>[p.nr||"", p.imone||"", (p.objektas||"").slice(0,40), fmtMoney(p.verte||0), p.rusis||"", (p.budas||"").slice(0,30), p.sutarciesData?String(p.sutarciesData).slice(0,10):""]);
+    doc.autoTable({startY:36, head:[["Nr.","Imone","Objektas","Verte","Rusis","Budas","Sutartis"]], body:rows, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:8}});
   }
-
-  if(type === "central"){
-    doc.setFontSize(14); doc.setFont("helvetica","bold");
-    doc.text("Centralizavimo rekomendacijos", 14, 30);
-    doc.setFontSize(10); doc.setFont("helvetica","normal");
-    doc.text("AI algoritmas analizavo grupės įmonių planus pagal CPV3 grupes.", 14, 38);
-    // Run analysis
-    runCentralAnalysis(); // populates DOM but we'll regenerate data
-    // Recompute groups
-    const groups = {};
-    DATA.procurements.forEach(p=>{
-      if(!p.bvpz) return;
-      const cpv3 = String(p.bvpz).replace(/\D/g,"").slice(0,3);
-      if(!cpv3) return;
-      if(!groups[cpv3]) groups[cpv3] = {cpv3, items:[], companies:new Set()};
-      groups[cpv3].items.push(p);
-      groups[cpv3].companies.add(p.imone||"?");
-    });
-    const rows = Object.values(groups).filter(g=>g.companies.size>=2)
-      .map(g=>{
-        const tv = g.items.reduce((s,p)=>s+(p.verte||0),0);
-        const synergy = g.companies.size >= 3 ? 25 : 15;
-        return [g.cpv3, g.items.length, [...g.companies].join(", "), fmtMoney(tv), `~${fmtMoney(tv*synergy/100)}`];
-      });
-    doc.autoTable({
-      startY: 46, head:[["CPV3","Pirkimų","Įmonės","Bendra vertė","Galima sutaupyti"]],
-      body:rows, headStyles:{fillColor:[0,160,114],textColor:255},
-      styles:{font:"helvetica",fontSize:9}
-    });
+  if(type==="central"){
+    doc.setFontSize(14); doc.setFont("helvetica","bold"); doc.text("Centralizavimo rekomendacijos",14,30);
+    const groups={};
+    DATA.procurements.forEach(p=>{ if(!p.bvpz) return; const c=String(p.bvpz).replace(/\D/g,"").slice(0,3); if(!c) return; if(!groups[c]) groups[c]={cpv3:c,items:[],companies:new Set()}; groups[c].items.push(p); groups[c].companies.add(p.imone||"?"); });
+    const rows=Object.values(groups).filter(g=>g.companies.size>=2).map(g=>{ const tv=g.items.reduce((s,p)=>s+(p.verte||0),0); const sy=g.companies.size>=3?25:15; return [g.cpv3, g.items.length, [...g.companies].join(", "), fmtMoney(tv), `~${fmtMoney(tv*sy/100)}`]; });
+    doc.autoTable({startY:46, head:[["CPV3","Pirkimu","Imones","Bendra verte","Galima sutaupyti"]], body:rows, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:9}});
   }
-
-  // Footer
-  const pageCount = doc.getNumberOfPages();
-  for(let i=1;i<=pageCount;i++){
-    doc.setPage(i);
-    doc.setFontSize(8); doc.setTextColor(115,116,131);
-    doc.text(`EPSO-G grupė · MPP ataskaita · psl. ${i}/${pageCount}`, 14, 205);
-  }
-
+  const pc=doc.getNumberOfPages();
+  for(let i=1;i<=pc;i++){ doc.setPage(i); doc.setFontSize(8); doc.setTextColor(115,116,131); doc.text(`EPSO-G grupe · MPP ataskaita · psl. ${i}/${pc}`,14,205); }
   doc.save(`EPSO-G_MPP_${type}_${today}.pdf`);
 }
 
-/* =========================================================
-   DEMO DATA
-   ========================================================= */
+/* ==================== DEMO DATA ==================== */
 function loadDemo(){
   if(DATA.procurements.length && !confirm("Pakeisti esamus duomenis demonstraciniais?")) return;
   DATA.procurements = [
@@ -1665,20 +1271,14 @@ function loadDemo(){
   goTab("dashboard");
 }
 
-/* =========================================================
-   FILTERS & SEARCH
-   ========================================================= */
+/* ==================== FILTERS ==================== */
 ["companyFilter","searchBox","filterMethod","filterType"].forEach(id=>{
-  const el = document.getElementById(id);
+  const el=document.getElementById(id);
   if(el) el.addEventListener("input", ()=>{ renderRegister(); renderDashboard(); renderValidation(); renderMethodAudit(); });
 });
+document.getElementById("modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
 
-// Close modal on overlay click
-document.getElementById("modal").addEventListener("click", e=>{ if(e.target.id === "modal") closeModal(); });
-
-/* =========================================================
-   INIT
-   ========================================================= */
+/* ==================== INIT ==================== */
 load();
 populateDurationOptions();
 renderDashboard();
