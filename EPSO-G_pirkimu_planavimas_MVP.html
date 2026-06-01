@@ -1657,18 +1657,53 @@ function computeWarnings(){
     }
   });
 
-  // 4. Dublikatai — panašus objektas + ta pati įmonė (Jaccard ≥ 0.5)
-  for(let i = 0; i < procs.length; i++){
-    for(let j = i+1; j < procs.length; j++){
-      if(procs[i].imone !== procs[j].imone) continue;
-      const tA = new Set(normTokens(procs[i].objektas));
-      const tB = new Set(normTokens(procs[j].objektas));
-      const sim = jaccard(tA, tB);
-      if(sim >= 0.5){
-        warnings.duplicates.push({a:procs[i], b:procs[j], similarity:Math.round(sim*100)});
+  // 4. Dublikatai — panašus objektas + ta pati įmonė (KLASTERIZAVIMAS, ne poros)
+  // v1.2.1: ankstesnė versija skaičiavo porų skaičių (N pirkimų → N×(N-1)/2 porų).
+  // Dabar grupuojami panašūs pirkimai į klasterius (Union-Find), kiekviena 2+ narių grupė = 1 dublikatas.
+  // Slenkstis pakeltas iki 0.7 (anksčiau 0.5) — patikimesnis aptikimas.
+  const DUP_THRESHOLD = 0.7;
+  const MIN_TOKENS = 2;
+  // Pirma pre-skaičiuojame tokenus kartą
+  const items = procs.map(p => ({p, tokens: new Set(normTokens(p.objektas))}));
+  // Grupavimas pagal įmonę — dublikatai galimi tik toje pačioje įmonėje
+  const byCompany = {};
+  items.forEach((it, idx) => {
+    if(it.tokens.size < MIN_TOKENS) return; // praleidžiame per trumpus pavadinimus
+    const key = it.p.imone || "?";
+    if(!byCompany[key]) byCompany[key] = [];
+    byCompany[key].push({...it, idx});
+  });
+  // Union-Find struktūra
+  function makeUF(n){
+    const parent = Array.from({length:n}, (_,i)=>i);
+    function find(x){ while(parent[x] !== x){ parent[x] = parent[parent[x]]; x = parent[x]; } return x; }
+    function union(a,b){ const ra=find(a), rb=find(b); if(ra!==rb) parent[ra]=rb; }
+    return {find, union, parent};
+  }
+  // Klasterizuojame kiekvienoje įmonėje atskirai (O(N²) tik įmonės viduje)
+  Object.entries(byCompany).forEach(([company, list]) => {
+    if(list.length < 2) return;
+    const uf = makeUF(list.length);
+    for(let i = 0; i < list.length; i++){
+      for(let j = i+1; j < list.length; j++){
+        const sim = jaccard(list[i].tokens, list[j].tokens);
+        if(sim >= DUP_THRESHOLD) uf.union(i, j);
       }
     }
-  }
+    // Surenkame klasterius
+    const clusters = {};
+    for(let i = 0; i < list.length; i++){
+      const root = uf.find(i);
+      if(!clusters[root]) clusters[root] = [];
+      clusters[root].push(list[i].p);
+    }
+    // Tik 2+ narių klasteriai laikomi dublikatais
+    Object.values(clusters).forEach(group => {
+      if(group.length >= 2){
+        warnings.duplicates.push({company, items: group, count: group.length});
+      }
+    });
+  });
 
   return warnings;
 }
@@ -1692,7 +1727,7 @@ function renderWarningCenter(){
     <div class="kpi ${w.late.length?'warn':''}"><span class="kpi-label">Vėluojantis inicijavimas</span><span class="kpi-value">${w.late.length}</span></div>
     <div class="kpi ${w.mismatch.length?'warn':''}"><span class="kpi-label">Procedūros neatitikimas</span><span class="kpi-value">${w.mismatch.length}</span></div>
     <div class="kpi ${w.split.length?'bad':''}"><span class="kpi-label">Galimas skaidymas</span><span class="kpi-value">${w.split.length}</span></div>
-    <div class="kpi ${w.duplicates.length?'warn':''}"><span class="kpi-label">Galimi dublikatai</span><span class="kpi-value">${w.duplicates.length}</span></div>
+    <div class="kpi ${w.duplicates.length?'warn':''}"><span class="kpi-label">Galimi dublikatai</span><span class="kpi-value">${w.duplicates.length}</span><span class="kpi-sub">grupės · ${w.duplicates.reduce((s,g)=>s+(g.count-1),0)} perteklinių</span></div>
   </div>`;
 
   if(w.late.length > 0){
@@ -1732,17 +1767,23 @@ function renderWarningCenter(){
   }
 
   if(w.duplicates.length > 0){
-    html += `<h4 style="color:#a35c00;margin-top:14px">📋 Galimi dublikatai (${w.duplicates.length})</h4>`;
-    w.duplicates.slice(0,5).forEach(({a, b, similarity}) => {
+    // v1.2.1: dabar dublikatai = klasterių grupės, ne poros. Sumuojame perteklinius narius.
+    const extraItems = w.duplicates.reduce((s,g) => s + (g.count - 1), 0);
+    html += `<h4 style="color:#a35c00;margin-top:14px">📋 Galimi dublikatai (${w.duplicates.length} grupės · ${extraItems} pertekliniai pirkimai)</h4>`;
+    // Rūšiuojame pagal grupės dydį (didžiausios — pirmiausia)
+    const sortedDups = [...w.duplicates].sort((a,b) => b.count - a.count);
+    sortedDups.slice(0,10).forEach(({company, items, count}) => {
+      const firstObj = items[0].objektas || "?";
       html += `<div class="alert warn" style="margin-bottom:6px"><span class="alert-icon">📋</span><div class="alert-body">
-        Panašumas <strong>${similarity}%</strong> · <span class="badge gray">${a.imone||"?"}</span><br>
-        <strong>${escapeHtml(a.nr||"?")}</strong>: ${escapeHtml((a.objektas||"").slice(0,55))}<br>
-        <strong>${escapeHtml(b.nr||"?")}</strong>: ${escapeHtml((b.objektas||"").slice(0,55))}<br>
-        <button class="btn ghost sm" onclick="editProc('${a.id}')">✎ A</button>
-        <button class="btn ghost sm" onclick="editProc('${b.id}')">✎ B</button>
+        <div class="alert-title"><span class="badge gray">${company||"?"}</span> · ${count} panašūs pirkimai · galima ${count-1} sutaupyti pozicijų</div>
+        <strong>Panašios pozicijos:</strong>
+        <ul style="margin:6px 0 4px 18px;padding:0;font-size:12.5px">
+          ${items.slice(0,6).map(p => `<li><strong>${escapeHtml(p.nr||"?")}</strong>: ${escapeHtml((p.objektas||"").slice(0,80))} <span class="muted">(${fmtMoney(p.verte||0)})</span> <button class="btn ghost sm" style="padding:2px 6px;font-size:10px" onclick="editProc('${p.id}')">✎</button></li>`).join("")}
+          ${items.length > 6 ? `<li class="muted">...ir dar ${items.length - 6} panašūs</li>` : ""}
+        </ul>
       </div></div>`;
     });
-    if(w.duplicates.length > 5) html += `<div class="muted" style="text-align:center;margin:8px">...ir dar ${w.duplicates.length - 5}</div>`;
+    if(sortedDups.length > 10) html += `<div class="muted" style="text-align:center;margin:8px">...ir dar ${sortedDups.length - 10} grupės</div>`;
   }
 
   wrap.innerHTML = html;
