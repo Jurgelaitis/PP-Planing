@@ -119,7 +119,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 
 <header class="app-header">
   <div class="brand-mark">EG</div>
-  <h1>EPSO-G grupės pirkimų planavimo įrankis<small>MVP v1.1 · Metinio pirkimų plano (MPP) analizė ir centralizavimas</small></h1>
+  <h1>EPSO-G grupės pirkimų planavimo įrankis<small>MVP v1.2.2 · Metinio pirkimų plano (MPP) analizė ir centralizavimas</small></h1>
   <div class="brand-spacer"></div>
   <div class="company-pill">
     Įmonė:
@@ -167,6 +167,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
       <button class="btn secondary" onclick="goTab('import')">📥 Importuoti Excel iš Doclogix</button>
       <button class="btn secondary" onclick="goTab('register');addNewProc()">➕ Pridėti pirkimą rankiniu būdu</button>
       <button class="btn ghost" onclick="goTab('export')">📤 Eksportuoti planą</button>
+      <div class="split-end"><button class="btn danger sm" onclick="clearAll()" title="Pašalinti visus pirkimus iš plano">🗑️ Išvalyti planą</button></div>
     </div>
   </div>
 
@@ -197,6 +198,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 
 <section class="section" id="sec-import">
   <h2>Excel importas iš Doclogix DVS<span class="h2-sub">Įkelkite metinio pirkimų plano (MPP) Excel failą — automatiškai atpažinsime laukus</span></h2>
+  <div id="importPrewarning"></div>
   <div class="card">
     <div class="dropzone" id="dz">
       <div class="icon">📥</div>
@@ -634,7 +636,27 @@ function goTab(name){
   if(name==="method") renderMethodAudit();
   if(name==="duration") populateDurationOptions();
   if(name==="capacity") renderCapacity();
+  if(name==="import") renderImportPrewarning(); // v1.2.2
   window.scrollTo(0,0);
+}
+
+// v1.2.2: jei plane jau yra duomenų, parodyti įspėjamą juostą su valymo mygtuku
+function renderImportPrewarning(){
+  const banner = document.getElementById("importPrewarning");
+  if(!banner) return;
+  const n = DATA.procurements.length;
+  if(n === 0){
+    banner.innerHTML = "";
+    return;
+  }
+  banner.innerHTML = `<div class="alert warn"><span class="alert-icon">⚠️</span><div class="alert-body">
+    <div class="alert-title">Plane jau yra ${n} pirkimų</div>
+    Naujai importuojami duomenys bus <strong>pridedami</strong> prie esamų (ne pakeičiami). Jei norite pradėti nuo nulio — pirma išvalykite planą.
+    <div style="margin-top:8px">
+      <button class="btn danger" onclick="clearAll()">🗑️ Išvalyti planą (${n}) prieš importą</button>
+      <button class="btn ghost sm" onclick="goTab('register')">📋 Peržiūrėti esamus →</button>
+    </div>
+  </div></div>`;
 }
 
 /* ==================== FIELD MAP & NORMALIZATION (FIXED v1.1) ==================== */
@@ -929,8 +951,21 @@ function delProc(id){
   save(); renderRegister(); renderDashboard();
 }
 function clearAll(){
-  if(!confirm("Išvalyti VISUS pirkimus? Šio veiksmo atšaukti negalima.")) return;
-  DATA.procurements = []; save(); renderRegister(); renderDashboard();
+  const n = DATA.procurements.length;
+  if(n === 0){
+    alert("Planas jau tuščias — nieko valyti nereikia.");
+    return;
+  }
+  if(!confirm(`Pašalinti ${n} pirkimų iš plano? Šio veiksmo atšaukti negalima.`)) return;
+  DATA.procurements = [];
+  // Belt-and-suspenders: aiškiai išvalyti localStorage
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  save();
+  renderRegister(); renderDashboard();
+  // v1.2.2: aiškus feedback po išvalymo
+  const banner = document.getElementById("importPrewarning");
+  if(banner) banner.innerHTML = "";
+  alert(`✓ Pašalinta ${n} pirkimų. Plane liko 0 įrašų. Dabar galite importuoti naujus duomenis.`);
 }
 // v1.2: filtrų išvalymas vienu mygtuku (naudojama validacijos ir metodo audito ekranuose)
 function clearAllFilters(){
