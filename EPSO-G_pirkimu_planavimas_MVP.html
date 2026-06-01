@@ -141,6 +141,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
   <div class="tab" data-section="method"><span class="tab-icon">⚖️</span>Pirkimo būdo analizė</div>
   <div class="tab" data-section="duration"><span class="tab-icon">⏱️</span>Terminų skaičiuoklė</div>
   <div class="tab" data-section="centralization"><span class="tab-icon">🤝</span>AI centralizavimas</div>
+  <div class="tab" data-section="capacity"><span class="tab-icon">📅</span>Pajėgumai</div>
   <div class="tab" data-section="export"><span class="tab-icon">📤</span>Eksportas</div>
 </nav>
 
@@ -167,6 +168,15 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
       <button class="btn secondary" onclick="goTab('register');addNewProc()">➕ Pridėti pirkimą rankiniu būdu</button>
       <button class="btn ghost" onclick="goTab('export')">📤 Eksportuoti planą</button>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="split">
+      <h3 style="margin:0">🚨 Perspėjimų centras</h3>
+      <span class="badge green" style="margin-left:6px">v1.2 — nauja</span>
+    </div>
+    <p class="muted" style="margin-top:4px">Automatiškai aptinka: vėluojantį inicijavimą, procedūros neatitikimą, galimą skaidymą, dublikatus.</p>
+    <div id="warningCenter"></div>
   </div>
   <div class="alert info">
     <span class="alert-icon">ℹ️</span>
@@ -247,6 +257,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 
 <section class="section" id="sec-validation">
   <h2>Duomenų validacija<span class="h2-sub">Automatinis pirminių duomenų patikrinimas — neatitikimai, trūkumai, anomalijos</span></h2>
+  <div id="validationFilterBanner"></div>
   <div class="grid grid-3" id="validationKpi">
     <div class="kpi"><span class="kpi-label">✅ Korektiški</span><span class="kpi-value" id="vOK">0</span></div>
     <div class="kpi warn"><span class="kpi-label">⚠ Įspėjimai</span><span class="kpi-value" id="vWarn">0</span></div>
@@ -298,6 +309,17 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
     </div>
   </div>
   <div class="card">
+    <div class="split">
+      <h3 style="margin:0">20% taisyklės portfelio kontrolė</h3>
+      <span class="badge green" style="margin-left:6px">v1.2 — nauja</span>
+      <div class="split-end">
+        <button class="btn secondary sm" onclick="run20PercentAnalysis()">🔄 Perskaičiuoti</button>
+      </div>
+    </div>
+    <p class="muted">Grupuoja pirkimus pagal CPV5 + įmonę ir tikrina, ar atskirų dalių (mažesnių už 80 000 € prekių/paslaugų arba 1 000 000 € darbų) bendra vertė neviršija 20 % bendro pirkimo (visų to paties tipo dalių) vertės. Taip pat aptinka galimą skaidymą (kelis MV pirkimus, kurių suma jau pasiekia tarpt. ribą).</p>
+    <div id="rule20Result"><div class="empty"><div class="icon">📊</div>Spauskite „Perskaičiuoti" — algoritmas peržiūrės visą plano portfelį.</div></div>
+  </div>
+  <div class="card">
     <h3>Visų plane esančių pirkimų būdo audito ataskaita</h3>
     <p class="muted">Įrankis tikrina, ar nurodytas pirkimo būdas atitinka pirkimo vertę ir tipą.</p>
     <div id="methodAudit"></div>
@@ -346,6 +368,31 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
       <div class="split-end"><button class="btn" onclick="runCentralAnalysis()">🤝 Atlikti analizę</button></div>
     </div>
     <div id="centralResult" style="margin-top:14px"><div class="empty"><div class="icon">🤝</div>Spauskite „Atlikti analizę" — algoritmas peržiūrės visų įmonių pirkimus.</div></div>
+  </div>
+</section>
+
+<section class="section" id="sec-capacity">
+  <h2>Pirkimų komandos pajėgumų kalendorius<span class="h2-sub">Pirkimų pasiskirstymas per mėnesius pagal įmonę / iniciatorių su sudėtingumo balais</span></h2>
+  <div class="card flat">
+    <h3>Kaip skaičiuojamas pajėgumo balas</h3>
+    <div class="grid grid-3" style="font-size:13px">
+      <div>Sudėtingumo balai pirkimo būdui:<br>
+        <strong>CPO</strong> = 1 · <strong>MV-NZ</strong> = 1 · <strong>MV-NR</strong> = 2 · <strong>MV-SAB/SAD</strong> = 3<br>
+        <strong>Supaprastintas</strong> = 4-5 · <strong>Tarptautinis</strong> = 7-10 · <strong>DPS</strong> = 2-3
+      </div>
+      <div>Pajėgumo balas = mėnesyje suplanuotų pirkimų sudėtingumo balų suma. Vizualizuojama kaip „šilumos žemėlapis" — kuo tamsesnis langelis, tuo didesnis pajėgumo poreikis.</div>
+      <div>Vienos eilutės pajėgumas paprastai laikomas <strong>30 balų/mėn.</strong> Šis dydis prilygsta vienam pilnam etatui. Galite koreguoti pagal Jūsų komandos dydį.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="split">
+      <h3 style="margin:0">Pasiskirstymo heatmap</h3>
+      <div class="split-end">
+        <label style="display:inline-block;margin-right:8px"><input type="checkbox" id="capByInitiator" onchange="renderCapacity()"> Pagal iniciatorius (vietoj įmonių)</label>
+        <button class="btn secondary sm" onclick="renderCapacity()">🔄 Atnaujinti</button>
+      </div>
+    </div>
+    <div id="capacityResult" style="margin-top:14px"><div class="empty"><div class="icon">📅</div>Pasirinkite duomenis arba įkelkite demo, kad pamatytumėte pajėgumų pasiskirstymą.</div></div>
   </div>
 </section>
 
@@ -432,15 +479,24 @@ const HOLIDAYS = [
 function save(){ try{localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA))}catch(e){} }
 function load(){ try{const s=localStorage.getItem(STORAGE_KEY); if(s) DATA=JSON.parse(s);}catch(e){} }
 
-/* ==================== WORKDAY ==================== */
-function isHoliday(d){ return HOLIDAYS.includes(d.toISOString().slice(0,10)); }
+/* ==================== WORKDAY (v1.2 — LOCAL TIMEZONE FIXED) ==================== */
+// Visi datos veiksmai naudoja vietos laiko zoną, ne UTC. Anksčiau toISOString() konvertuodavo
+// vietos vidurnaktį į UTC (-2/-3 val.), dėl ko data pasislinkdavo viena diena atgal.
+function _isoLocal(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+function isHoliday(d){ return HOLIDAYS.includes(_isoLocal(d)); }
 function isWorkday(d){ const dow=d.getDay(); return dow!==0 && dow!==6 && !isHoliday(d); }
 function addWorkdays(date, days){
-  const d=new Date(date); let added=0; const dir=days>=0?1:-1; const target=Math.abs(days);
+  const d=new Date(date.getFullYear(), date.getMonth(), date.getDate()); // strip time
+  let added=0; const dir=days>=0?1:-1; const target=Math.abs(days);
   while(added<target){ d.setDate(d.getDate()+dir); if(isWorkday(d)) added++; }
   return d;
 }
-function fmtDate(d){ if(!(d instanceof Date)) d=new Date(d); if(isNaN(d)) return ""; return d.toISOString().slice(0,10); }
+function fmtDate(d){ if(!(d instanceof Date)) d=new Date(d); if(isNaN(d)) return ""; return _isoLocal(d); }
 function parseDate(s){
   if(!s) return null;
   if(s instanceof Date) return isNaN(s)?null:s;
@@ -577,6 +633,7 @@ function goTab(name){
   if(name==="validation") renderValidation();
   if(name==="method") renderMethodAudit();
   if(name==="duration") populateDurationOptions();
+  if(name==="capacity") renderCapacity();
   window.scrollTo(0,0);
 }
 
@@ -875,6 +932,14 @@ function clearAll(){
   if(!confirm("Išvalyti VISUS pirkimus? Šio veiksmo atšaukti negalima.")) return;
   DATA.procurements = []; save(); renderRegister(); renderDashboard();
 }
+// v1.2: filtrų išvalymas vienu mygtuku (naudojama validacijos ir metodo audito ekranuose)
+function clearAllFilters(){
+  document.getElementById("companyFilter").value = "ALL";
+  const sb = document.getElementById("searchBox"); if(sb) sb.value = "";
+  const fm = document.getElementById("filterMethod"); if(fm) fm.value = "";
+  const ft = document.getElementById("filterType"); if(ft) ft.value = "";
+  renderRegister(); renderDashboard(); renderValidation(); renderMethodAudit();
+}
 
 function openProcModal(p){
   const isNew = !p;
@@ -963,8 +1028,38 @@ function recalcAll(){
 }
 
 /* ==================== VALIDATION VIEW ==================== */
+function getActiveFilterDescription(){
+  const company = document.getElementById("companyFilter").value;
+  const search = (document.getElementById("searchBox")?.value || "").trim();
+  const fMethod = document.getElementById("filterMethod")?.value || "";
+  const fType = document.getElementById("filterType")?.value || "";
+  const parts = [];
+  if(company !== "ALL") parts.push({label:"Įmonė", value: COMPANIES[company]?.name || company});
+  if(search) parts.push({label:"Paieška", value: `"${search}"`});
+  if(fMethod) parts.push({label:"Pirkimo būdas", value: fMethod});
+  if(fType) parts.push({label:"Rūšis", value: fType});
+  return parts;
+}
+
 function renderValidation(){
   const procs = getFilteredProcs();
+  const totalAll = DATA.procurements.length;
+  const filters = getActiveFilterDescription();
+  // v1.2: filtrų indikatorius — aktyvus filtras matomas, kad nevisada būtų klaidingai optimistinė išvada
+  const banner = document.getElementById("validationFilterBanner");
+  if(filters.length > 0){
+    banner.innerHTML = `<div class="alert warn" style="margin-bottom:12px"><span class="alert-icon">🔎</span><div class="alert-body">
+      <div class="alert-title">Validacija rodoma su aktyviu filtru — rezultatai gali būti nepilni</div>
+      Rodoma <strong>${procs.length}</strong> iš <strong>${totalAll}</strong> visų plano pirkimų.<br>
+      Aktyvūs filtrai: ${filters.map(f => `<span class="badge yellow" style="margin-right:4px">${escapeHtml(f.label)}: ${escapeHtml(f.value)}</span>`).join("")}
+      <button class="btn ghost sm" style="margin-top:6px" onclick="clearAllFilters()">✕ Išvalyti visus filtrus</button>
+    </div></div>`;
+  } else if(totalAll > 0) {
+    banner.innerHTML = `<div class="alert info" style="margin-bottom:12px"><span class="alert-icon">✓</span><div class="alert-body">Validacija rodoma visam planui — <strong>${totalAll}</strong> pirkimų, jokie filtrai neaktyvūs.</div></div>`;
+  } else {
+    banner.innerHTML = "";
+  }
+
   let ok=0, warn=0, err=0;
   const items=[];
   procs.forEach(p=>{
@@ -977,7 +1072,11 @@ function renderValidation(){
   document.getElementById("vWarn").textContent = warn;
   document.getElementById("vErr").textContent = err;
   const list = document.getElementById("validationList");
-  if(items.length===0){ list.innerHTML=`<div class="empty"><div class="icon">✅</div>Visi pirkimai atitinka taisykles. Puiku!</div>`; return; }
+  if(items.length===0){
+    const msg = filters.length > 0 ? "Filtruotuose pirkimuose problemų neaptikta. Patikrinkite ir kitas grupes." : "Visi pirkimai atitinka taisykles. Puiku!";
+    list.innerHTML=`<div class="empty"><div class="icon">✅</div>${msg}</div>`;
+    return;
+  }
   list.innerHTML = items.map(({p,issues})=>`
     <div class="alert ${issues.some(i=>i.sev==='err')?'error':'warn'}">
       <span class="alert-icon">${issues.some(i=>i.sev==='err')?'❌':'⚠️'}</span>
@@ -1011,6 +1110,116 @@ function runMethodTest(){
         </div>
         ${r.rule20.applies?`<div class="hint" style="margin-top:10px">📌 ${r.rule20.note}</div>`:""}
       </div></div>`;
+}
+
+/* ==================== 20% TAISYKLĖS PORTFELIO KONTROLĖ (v1.2 — nauja) ====================
+ * Grupuoja pirkimus pagal CPV5 + įmonė + objekto rūšis.
+ * Kiekvienai grupei (potencialus „vienas pirkimas su dalimis"):
+ *   - Bendra vertė
+ *   - Mažos vertės dalys (< 80 000 € prekės/paslaugos, < 1 000 000 € darbai)
+ *   - Šių dalių % nuo bendros vertės
+ *   - Pažeidimas, jei >20%
+ *   - Skaidymo įtarimas, jei visa grupė susideda iš MV pirkimų, bet bendra suma viršija MV ribą
+ */
+function run20PercentAnalysis(){
+  if(DATA.procurements.length === 0){
+    document.getElementById("rule20Result").innerHTML = `<div class="empty"><div class="icon">📊</div>Nėra duomenų. Įkelkite arba pridėkite pirkimų.</div>`;
+    return;
+  }
+  // Grupavimas: įmonė + CPV5 + rūšis (nes 20% taisyklė taikoma per to paties tipo dalis)
+  const groups = {};
+  DATA.procurements.forEach(p => {
+    const cpv = cpvKey(p.bvpz);
+    if(!cpv || cpv.length < 3) return;
+    const key = `${p.imone||"?"}|${cpv}|${p.rusis||"?"}`;
+    if(!groups[key]) groups[key] = {imone:p.imone||"?", cpv5:cpv, rusis:p.rusis||"?", items:[]};
+    groups[key].items.push(p);
+  });
+
+  // Skaičiavimai
+  const results = Object.values(groups).map(g => {
+    const isWorks = g.rusis === "Darbai";
+    const lotLimit = isWorks ? 1000000 : 80000; // 20% taisyklės dalies riba
+    const mvLimit = isWorks ? 174000 : 70000;   // MV viršutinė riba
+    const company = COMPANIES[g.imone] || COMPANIES["EPSO-G"];
+    const T = THRESHOLDS[company.law];
+    const intlThreshold = isWorks ? T.intl_works : T.intl_goods;
+    const totalValue = g.items.reduce((s,p) => s + (p.verte||0), 0);
+    const smallLots = g.items.filter(p => (p.verte||0) < lotLimit);
+    const smallLotsValue = smallLots.reduce((s,p) => s + (p.verte||0), 0);
+    const smallLotsPct = totalValue > 0 ? (smallLotsValue / totalValue * 100) : 0;
+    const allMV = g.items.every(p => (p.verte||0) < mvLimit);
+    return {...g, totalValue, smallLots, smallLotsValue, smallLotsPct, lotLimit, mvLimit, intlThreshold, allMV, isWorks};
+  });
+
+  // Klasifikacija pagal statusą
+  const rule20Violations = results.filter(r => r.totalValue >= r.intlThreshold && r.smallLotsPct > 20);
+  const rule20AtRisk     = results.filter(r => r.totalValue >= r.intlThreshold && r.smallLotsPct > 15 && r.smallLotsPct <= 20);
+  const splitRisk        = results.filter(r => r.items.length >= 2 && r.allMV && r.totalValue >= r.mvLimit);
+  const okGroups         = results.filter(r => r.totalValue < r.intlThreshold || r.smallLotsPct <= 15).filter(r => !splitRisk.includes(r));
+
+  let html = `<div class="grid grid-4">
+    <div class="kpi"><span class="kpi-label">Grupių iš viso</span><span class="kpi-value">${results.length}</span><span class="kpi-sub">CPV5 + įmonė + rūšis</span></div>
+    <div class="kpi cool"><span class="kpi-label">Atitinka taisyklę</span><span class="kpi-value">${okGroups.length}</span><span class="kpi-sub">≤15% MV dalių</span></div>
+    <div class="kpi warn"><span class="kpi-label">Rizikos zonoje</span><span class="kpi-value">${rule20AtRisk.length}</span><span class="kpi-sub">15-20% MV dalių</span></div>
+    <div class="kpi bad"><span class="kpi-label">Pažeidimai</span><span class="kpi-value">${rule20Violations.length + splitRisk.length}</span><span class="kpi-sub">>20% arba skaidymas</span></div>
+  </div>`;
+
+  if(rule20Violations.length === 0 && rule20AtRisk.length === 0 && splitRisk.length === 0){
+    html += `<div class="alert" style="margin-top:14px"><span class="alert-icon">✅</span><div class="alert-body"><div class="alert-title">Pažeidimų neaptikta</div>Visos CPV5 grupės atitinka 20% taisyklę ir skaidymo požymių nėra.</div></div>`;
+    document.getElementById("rule20Result").innerHTML = html;
+    return;
+  }
+
+  // Pažeidimai (>20%)
+  if(rule20Violations.length > 0){
+    html += `<h4 style="margin-top:18px;color:var(--raudona)">❌ 20% taisyklės pažeidimai (${rule20Violations.length})</h4>`;
+    rule20Violations.forEach(r => {
+      html += render20PctCard(r, "error");
+    });
+  }
+  // Rizikoje (15-20%)
+  if(rule20AtRisk.length > 0){
+    html += `<h4 style="margin-top:18px;color:#a35c00">⚠ Rizikos zonoje (${rule20AtRisk.length})</h4>`;
+    rule20AtRisk.forEach(r => {
+      html += render20PctCard(r, "warn");
+    });
+  }
+  // Skaidymo įtarimai
+  if(splitRisk.length > 0){
+    html += `<h4 style="margin-top:18px;color:var(--raudona)">🚩 Galimas skaidymas (${splitRisk.length})</h4>`;
+    splitRisk.forEach(r => {
+      html += `<div class="alert error" style="margin-bottom:8px"><span class="alert-icon">🚩</span><div class="alert-body">
+        <div class="alert-title">${r.imone} · CPV ${r.cpv5} · ${r.rusis} · ${r.items.length} pirkimai</div>
+        Visi pirkimai pažymėti kaip <strong>mažos vertės</strong> (kiekvienas &lt; ${fmtMoney(r.mvLimit)}), tačiau jų <strong>bendra vertė yra ${fmtMoney(r.totalValue)}</strong> — jau pasiekia ar viršija MV ribą. <strong>Tai požymis, kad pirkimas dirbtinai suskaidytas.</strong>
+        <div class="muted" style="margin-top:6px">Pirkimai: ${r.items.map(p => escapeHtml(p.nr||"?")).join(", ")}</div>
+        <div class="hint" style="margin-top:6px">💡 Apsvarstykite organizuoti kaip vieną supaprastintą ar tarptautinį pirkimą su dalimis pagal VPĮ/PĮ.</div>
+      </div></div>`;
+    });
+  }
+
+  document.getElementById("rule20Result").innerHTML = html;
+}
+
+function render20PctCard(r, severity){
+  const cls = severity === "error" ? "error" : "warn";
+  const pctColor = severity === "error" ? "var(--raudona)" : "var(--geltona)";
+  return `<div class="alert ${cls}" style="margin-bottom:8px"><span class="alert-icon">${severity==="error"?"❌":"⚠"}</span><div class="alert-body">
+    <div class="alert-title">${r.imone} · CPV ${r.cpv5} · ${r.rusis} · ${r.items.length} pirkimai</div>
+    <div class="grid grid-4" style="margin-top:8px">
+      <div><span class="muted">Bendra vertė</span><br><strong>${fmtMoney(r.totalValue)}</strong></div>
+      <div><span class="muted">Tarpt. riba</span><br><strong>${fmtMoney(r.intlThreshold)}</strong></div>
+      <div><span class="muted">MV dalių suma (&lt;${fmtMoney(r.lotLimit)})</span><br><strong>${fmtMoney(r.smallLotsValue)}</strong></div>
+      <div><span class="muted">% nuo bendros</span><br><strong style="color:${pctColor}">${r.smallLotsPct.toFixed(1)}%</strong> <span class="muted">/ 20%</span></div>
+    </div>
+    <div class="progress" style="margin-top:8px"><div style="width:${Math.min(100,r.smallLotsPct*5)}%;background:${pctColor}"></div></div>
+    <details style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:var(--smaragdas);font-weight:600">Pirkimų sąrašas (${r.items.length}) ▾</summary>
+      <table style="margin-top:8px;min-width:auto;font-size:11px">
+        <thead><tr><th>Nr.</th><th>Objektas</th><th>Vertė</th><th>BVPŽ</th><th>Tipas</th></tr></thead>
+        <tbody>${r.items.map(p=>`<tr><td>${escapeHtml(p.nr||"")}</td><td>${escapeHtml((p.objektas||"").slice(0,50))}</td><td>${fmtMoney(p.verte||0)}</td><td style="font-family:monospace">${escapeHtml(String(p.bvpz||"").slice(0,12))}</td><td>${(p.verte||0) < r.lotLimit ? '<span class="badge yellow">MV dalis</span>' : '<span class="badge blue">virš ribos</span>'}</td></tr>`).join("")}</tbody>
+      </table>
+    </details>
+  </div></div>`;
 }
 
 function renderMethodAudit(){
@@ -1085,52 +1294,152 @@ function runDuration(){
       </div></div>`;
 }
 
-/* ==================== CENTRALIZATION ==================== */
+/* ==================== CENTRALIZATION (v1.2) ====================
+ * Patobulinta grupavimo logika:
+ *   1. CPV5 (5 skaitm.) vietoj CPV3 — užkerta kelią elektros linijoms ir
+ *      dujotiekiui patekti į tą pačią grupę (abu turi CPV3 "452" bet skirtus CPV5).
+ *   2. Jaccard teksto panašumo testas pagal objekto pavadinimo žodžius —
+ *      jei objektai pernelyg skirtingi (intersection / union < 0.15), jie
+ *      atskiriami į skirtingus klasterius net su tuo pačiu CPV5.
+ *   3. computeSynergy() — bendra formulė, naudojama ir ekrane, ir PDF.
+ */
+
+// Lietuviški stopžodžiai, kurie filtruojami iš pavadinimo tokenizacijos
+const STOPWORDS_LT = new Set([
+  "ir","ar","bei","su","be","del","dėl","is","iš","i","į","per","pagal","ant",
+  "kaip","kad","tai","tos","tas","ta","tu","to","tau","jis","ji","jie","jos",
+  "kiti","kita","kitas","kitos","savo","jam","jai","yra","buvo","bus","esu",
+  "mes","jus","jus","jo","jos","jau","tik","dar","gali","galima","reikia",
+  "bei","tarp","pas","kol","kai","jei","jeigu","kuris","kuriai","kurio","kurioj"
+]);
+function normTokens(s){
+  return String(s||"")
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu," ")
+    .split(/\s+/)
+    .filter(t => t.length >= 4 && !STOPWORDS_LT.has(t))
+    .map(t => t.length > 8 ? t.slice(0, 8) : t); // crude stemming
+}
+function jaccard(setA, setB){
+  if(!setA.size || !setB.size) return 0;
+  let inter = 0;
+  for(const x of setA) if(setB.has(x)) inter++;
+  return inter / (setA.size + setB.size - inter);
+}
+function cpvKey(bvpz){
+  // CPV5 — pirmi 5 skaitm. (pvz. "45231" elektros/dujų linijoms; "30232" spausdintuvams)
+  return String(bvpz||"").replace(/\D/g,"").slice(0,5);
+}
+
+// Grupavimas: pradinis CPV5 → klasterizavimas pagal teksto panašumą
+function buildCentralizationClusters(){
+  const cpvGroups = {};
+  DATA.procurements.forEach(p=>{
+    const key = cpvKey(p.bvpz);
+    if(!key || key.length < 3) return;
+    if(!cpvGroups[key]) cpvGroups[key] = [];
+    cpvGroups[key].push({...p, _tokens: new Set(normTokens(p.objektas))});
+  });
+
+  const clusters = [];
+  for(const [cpv, items] of Object.entries(cpvGroups)){
+    if(items.length === 0) continue;
+    // Klasterizacija jungiamuoju metodu (kiekvienas pirkimas pradeda savo klasterį,
+    // tada jungiami klasteriai kurių bet kuris narys panašus į kandidatą Jaccard ≥ 0.15)
+    const assigned = new Array(items.length).fill(-1);
+    let nextClusterId = 0;
+    for(let i = 0; i < items.length; i++){
+      if(assigned[i] !== -1) continue;
+      assigned[i] = nextClusterId;
+      // Pridėti panašius narius į tą patį klasterį
+      let changed = true;
+      while(changed){
+        changed = false;
+        for(let j = 0; j < items.length; j++){
+          if(assigned[j] !== -1) continue;
+          // Tikriname panašumą su bet kuriuo jau klasteryje esančiu pirkimu
+          for(let k = 0; k < items.length; k++){
+            if(assigned[k] === nextClusterId){
+              const sim = jaccard(items[j]._tokens, items[k]._tokens);
+              if(sim >= 0.15){
+                assigned[j] = nextClusterId;
+                changed = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      nextClusterId++;
+    }
+    // Surenkame klasterius
+    const clusterMap = {};
+    for(let i = 0; i < items.length; i++){
+      const cid = assigned[i];
+      if(!clusterMap[cid]) clusterMap[cid] = [];
+      clusterMap[cid].push(items[i]);
+    }
+    Object.values(clusterMap).forEach(clusterItems => {
+      // Atrasti dominuojantį (dažniausią) tokeną kaip klasterio etiketę
+      const tokenCounts = {};
+      clusterItems.forEach(it => it._tokens.forEach(t => tokenCounts[t]=(tokenCounts[t]||0)+1));
+      const label = Object.entries(tokenCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || "objektai";
+      clusters.push({cpv5: cpv, label, items: clusterItems});
+    });
+  }
+  return clusters;
+}
+
+// Bendra sinergijos skaičiavimo formulė — naudojama ir ekrane, ir PDF
+function computeSynergy(group){
+  const items = group.items;
+  const companies = new Set(items.map(p => p.imone || "?"));
+  const totalValue = items.reduce((s,p) => s + (p.verte||0), 0);
+  const dates = items.map(p => parseDate(p.sutarciesData)).filter(Boolean);
+  let timeAlign = "n/a";
+  if(dates.length >= 2){
+    const span = Math.abs((Math.max(...dates) - Math.min(...dates)) / 86400000);
+    timeAlign = span <= 90 ? "stiprus" : span <= 180 ? "vidutinis" : "silpnas";
+  }
+  const cc = companies.size, ic = items.length;
+  let synergyPct = 5;
+  if(cc >= 3 && ic >= 4) synergyPct = 25;
+  else if(cc >= 2 && ic >= 3) synergyPct = 15;
+  else if(cc >= 2) synergyPct = 10;
+  if(timeAlign === "stiprus") synergyPct += 5;
+  const savings = Math.round(totalValue * synergyPct / 100);
+  const score = cc*10 + ic*3 + (timeAlign==="stiprus"?20:timeAlign==="vidutinis"?10:0) + Math.log10(totalValue+1)*2;
+  return {
+    cpv5: group.cpv5, label: group.label, items, companies: [...companies],
+    totalValue, timeAlign, synergyPct, savings, score
+  };
+}
+
 function runCentralAnalysis(){
   if(DATA.procurements.length===0){
     document.getElementById("centralResult").innerHTML=`<div class="empty"><div class="icon">🤝</div>Nėra duomenų.</div>`;
     return;
   }
-  const groups={};
-  DATA.procurements.forEach(p=>{
-    if(!p.bvpz) return;
-    const cpv3=String(p.bvpz).replace(/\D/g,"").slice(0,3);
-    if(!cpv3) return;
-    if(!groups[cpv3]) groups[cpv3]={cpv3, items:[], companies:new Set()};
-    groups[cpv3].items.push(p);
-    groups[cpv3].companies.add(p.imone||"?");
-  });
-  const candidates=Object.values(groups)
-    .filter(g => g.companies.size >= 2 || g.items.length >= 2)
-    .map(g=>{
-      const totalValue=g.items.reduce((s,p)=>s+(p.verte||0),0);
-      const dates=g.items.map(p=>parseDate(p.sutarciesData)).filter(Boolean);
-      let timeAlign="n/a";
-      if(dates.length>=2){
-        const span=Math.abs((Math.max(...dates)-Math.min(...dates))/86400000);
-        timeAlign=span<=90?"stiprus":span<=180?"vidutinis":"silpnas";
-      }
-      const cc=g.companies.size, ic=g.items.length;
-      let synergyPct=5;
-      if(cc>=3&&ic>=4) synergyPct=25;
-      else if(cc>=2&&ic>=3) synergyPct=15;
-      else if(cc>=2) synergyPct=10;
-      if(timeAlign==="stiprus") synergyPct+=5;
-      const savings=Math.round(totalValue*synergyPct/100);
-      return {cpv3:g.cpv3, items:g.items, companies:[...g.companies], totalValue, timeAlign, synergyPct, savings,
-              score: cc*10 + ic*3 + (timeAlign==="stiprus"?20:timeAlign==="vidutinis"?10:0) + Math.log10(totalValue+1)*2};
+  const clusters = buildCentralizationClusters();
+  const candidates = clusters
+    .filter(g => {
+      const companies = new Set(g.items.map(p => p.imone || "?"));
+      return companies.size >= 2 || g.items.length >= 2;
     })
-    .sort((a,b)=>b.score-a.score);
+    .map(computeSynergy)
+    .sort((a,b)=>b.score - a.score);
+
   document.getElementById("kpiCentral").textContent=candidates.length;
   if(candidates.length===0){
-    document.getElementById("centralResult").innerHTML=`<div class="empty"><div class="icon">🤝</div>Centralizavimo kandidatų neaptikta. Bent 2 įmonės turėtų turėti pirkimų pagal tą pačią CPV3 grupę.</div>`;
+    document.getElementById("centralResult").innerHTML=`<div class="empty"><div class="icon">🤝</div>Centralizavimo kandidatų neaptikta. Bent 2 įmonės turėtų turėti pirkimų su panašiu objekto pavadinimu ir ta pačia CPV5 grupe.</div>`;
     return;
   }
-  let html=`<div class="alert info"><span class="alert-icon">🤝</span><div class="alert-body"><div class="alert-title">Aptikti ${candidates.length} centralizavimo kandidatai</div>Bendra galima sutaupyti suma: <strong>${fmtMoney(candidates.reduce((s,c)=>s+c.savings,0))}</strong></div></div>`;
+  let html=`<div class="alert info"><span class="alert-icon">🤝</span><div class="alert-body"><div class="alert-title">Aptikti ${candidates.length} centralizavimo kandidatai</div>Bendra galima sutaupyti suma: <strong>${fmtMoney(candidates.reduce((s,c)=>s+c.savings,0))}</strong><br><small>Grupuojama pagal CPV5 (5 skaitm.) + objekto pavadinimo panašumą (Jaccard ≥ 0.15). El. linijos ir dujotiekiai į vieną klasterį nepatenka.</small></div></div>`;
   candidates.slice(0,12).forEach(c=>{
     const recColor=c.synergyPct>=20?"green":c.synergyPct>=12?"yellow":"gray";
     html+=`<div class="card" style="margin-bottom:10px">
-      <div class="split"><h4 style="margin:0">CPV ${c.cpv3} · ${c.items.length} pirkimai · ${c.companies.length} įmonės</h4>
+      <div class="split"><h4 style="margin:0">CPV ${c.cpv5} · „${escapeHtml(c.label)}" · ${c.items.length} pirkimai · ${c.companies.length} įmonės</h4>
         <span class="badge ${recColor}">Sinergija ${c.synergyPct}%</span>
         <span class="badge blue">Datų derinimas: ${c.timeAlign}</span>
         <div class="split-end"><strong>${fmtMoney(c.totalValue)}</strong> · galima sutaupyti ~${fmtMoney(c.savings)}</div>
@@ -1149,9 +1458,300 @@ function runCentralAnalysis(){
   document.getElementById("centralResult").innerHTML=html;
 }
 
+/* ==================== PAJĖGUMŲ KALENDORIUS (v1.2 — nauja) ====================
+ * Heatmap: eilutės = įmonės arba iniciatoriai, stulpeliai = mėnesiai (12 mėn nuo dabartinio),
+ * langelio reikšmė = pirkimų sudėtingumo balų suma. Spalva intensyvėja kuo didesnė reikšmė.
+ */
+const METHOD_COMPLEXITY = {
+  "CPO":1, "MV-NZ":1, "MV-NR":2, "MV-SAB":3, "MV-SAD":3,
+  "S-ND":4, "S-AK":5, "S-SD":6,
+  "T-ND":7, "T-AK":8, "T-SD":10,
+  "DPS":3, "DPS-K":2
+};
+const CAPACITY_PER_ROW = 30; // balai per mėnesį per eilutę (~1 etatas)
+
+function renderCapacity(){
+  const wrap = document.getElementById("capacityResult");
+  if(!wrap) return;
+  if(DATA.procurements.length === 0){
+    wrap.innerHTML = `<div class="empty"><div class="icon">📅</div>Nėra duomenų.</div>`;
+    return;
+  }
+  const byInitiator = document.getElementById("capByInitiator")?.checked || false;
+
+  // Surasti mėnesių range'ą iš inicData (jei yra) arba sutarties datos -3 mėn.
+  const monthKeys = [];
+  const todayMonth = new Date().getMonth();
+  const todayYear = new Date().getFullYear();
+  for(let i = 0; i < 14; i++){
+    const d = new Date(todayYear, todayMonth + i, 1);
+    monthKeys.push({
+      key: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,
+      label: d.toLocaleDateString("lt-LT", {year:"numeric", month:"short"}),
+      year: d.getFullYear(), month: d.getMonth()
+    });
+  }
+
+  // Grupuoti pirkimus pagal įmonę arba iniciatorių + mėnesį
+  const cells = {}; // {rowKey: {monthKey: {score, count, items}}}
+  DATA.procurements.forEach(p => {
+    const rowKey = byInitiator ? (p.iniciatorius||"Be iniciatoriaus") : (p.imone||"?");
+    // Naudojame pirkimo pradžios datą kaip „vykdymo mėnesį" (kada komanda dirba)
+    let dExec = parseDate(p.pirkimoData) || parseDate(p.inicData) || parseDate(p.sutarciesData);
+    if(!dExec) return;
+    const mk = `${dExec.getFullYear()}-${String(dExec.getMonth()+1).padStart(2,"0")}`;
+    const code = mapMethodNameToCode(p.budas);
+    const score = code ? (METHOD_COMPLEXITY[code]||3) : 3;
+    if(!cells[rowKey]) cells[rowKey] = {};
+    if(!cells[rowKey][mk]) cells[rowKey][mk] = {score:0, count:0, items:[]};
+    cells[rowKey][mk].score += score;
+    cells[rowKey][mk].count += 1;
+    cells[rowKey][mk].items.push(p);
+  });
+
+  const rowKeys = Object.keys(cells).sort();
+  if(rowKeys.length === 0){
+    wrap.innerHTML = `<div class="empty"><div class="icon">📅</div>Pirkimuose nėra pakankamai datos duomenų.</div>`;
+    return;
+  }
+
+  // Maksimumas spalvinimui
+  let maxScore = 0;
+  rowKeys.forEach(rk => {
+    monthKeys.forEach(mk => {
+      const c = cells[rk]?.[mk.key];
+      if(c) maxScore = Math.max(maxScore, c.score);
+    });
+  });
+
+  function cellColor(score){
+    if(score === 0) return "#fff";
+    const ratio = Math.min(1, score / Math.max(maxScore, CAPACITY_PER_ROW));
+    // Žalia (mažas) → geltona (vidutinis) → raudona (perkrauta)
+    if(ratio < 0.5){
+      // light green to green
+      const t = ratio / 0.5;
+      return `rgba(0,160,114,${0.15 + t*0.45})`;
+    } else if(ratio < 0.85){
+      const t = (ratio - 0.5) / 0.35;
+      return `rgba(250, 176, 59, ${0.4 + t*0.5})`;
+    } else {
+      return `rgba(219, 53, 74, ${0.5 + Math.min(ratio - 0.85, 0.15)*3})`;
+    }
+  }
+  function textColor(score){
+    if(score === 0) return "var(--grafitas-50)";
+    const ratio = Math.min(1, score / Math.max(maxScore, CAPACITY_PER_ROW));
+    return ratio >= 0.5 ? "#fff" : "var(--grafitas)";
+  }
+
+  let html = `<div style="overflow:auto;border:1px solid var(--grafitas-15);border-radius:10px;background:#fff">
+    <table style="border-collapse:collapse;font-size:11.5px">
+      <thead><tr>
+        <th style="background:var(--zalia-15);padding:10px;text-align:left;position:sticky;left:0;z-index:2;border-bottom:2px solid var(--smaragdas);min-width:180px">${byInitiator?"Iniciatorius":"Įmonė"}</th>
+        ${monthKeys.map(mk => `<th style="background:var(--zalia-15);padding:8px;text-align:center;border-bottom:2px solid var(--smaragdas);font-size:10.5px">${mk.label}</th>`).join("")}
+        <th style="background:var(--smaragdas-15);padding:10px;text-align:center;border-bottom:2px solid var(--smaragdas)">Iš viso</th>
+      </tr></thead>
+      <tbody>`;
+  rowKeys.forEach(rk => {
+    let rowTotal = 0;
+    let rowItems = 0;
+    html += `<tr><td style="padding:8px 12px;font-weight:600;position:sticky;left:0;background:#fff;border-bottom:1px solid var(--grafitas-15);z-index:1">${escapeHtml(rk)}</td>`;
+    monthKeys.forEach(mk => {
+      const c = cells[rk]?.[mk.key];
+      const s = c?.score || 0;
+      const cnt = c?.count || 0;
+      rowTotal += s;
+      rowItems += cnt;
+      const overload = s > CAPACITY_PER_ROW;
+      html += `<td title="${cnt} pirkimai · ${s} balai${overload?' (PERKROVA)':''}" style="text-align:center;padding:8px 6px;background:${cellColor(s)};color:${textColor(s)};font-weight:${s>0?700:400};border-bottom:1px solid var(--grafitas-15);min-width:60px">${s>0?(s+(overload?'⚠':'')):"·"}<br><span style="font-size:9px;opacity:.8">${cnt>0?cnt+" prk.":""}</span></td>`;
+    });
+    const overloadTotal = rowTotal > CAPACITY_PER_ROW * monthKeys.length * 0.7;
+    html += `<td style="text-align:center;padding:8px;background:var(--smaragdas-5);font-weight:700;border-bottom:1px solid var(--grafitas-15)">${rowTotal}<br><span style="font-size:9px;color:var(--grafitas-50)">${rowItems} prk.</span></td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Apibendrinta statistika
+  const totalScore = rowKeys.reduce((s,rk) => s + Object.values(cells[rk]).reduce((s2,c)=>s2+c.score, 0), 0);
+  const overloadedCells = [];
+  rowKeys.forEach(rk => {
+    monthKeys.forEach(mk => {
+      const c = cells[rk]?.[mk.key];
+      if(c && c.score > CAPACITY_PER_ROW){
+        overloadedCells.push({row:rk, month:mk.label, score:c.score, count:c.count});
+      }
+    });
+  });
+
+  html += `<div class="grid grid-3" style="margin-top:14px">
+    <div class="kpi"><span class="kpi-label">Bendras pajėgumo poreikis</span><span class="kpi-value">${totalScore}</span><span class="kpi-sub">balų ${monthKeys.length} mėn.</span></div>
+    <div class="kpi cool"><span class="kpi-label">Komandos pajėgumas</span><span class="kpi-value">${rowKeys.length * CAPACITY_PER_ROW * monthKeys.length}</span><span class="kpi-sub">balų esant ${rowKeys.length} ${byInitiator?'iniciator.':'įmon.'}</span></div>
+    <div class="kpi ${overloadedCells.length?'bad':''}"><span class="kpi-label">Perkrauti mėnesiai</span><span class="kpi-value">${overloadedCells.length}</span><span class="kpi-sub">&gt; ${CAPACITY_PER_ROW} balų/mėn.</span></div>
+  </div>`;
+
+  if(overloadedCells.length > 0){
+    html += `<div class="alert warn" style="margin-top:12px"><span class="alert-icon">⚠</span><div class="alert-body">
+      <div class="alert-title">${overloadedCells.length} perkrautų laikotarpių aptikta</div>
+      Šie mėnesiai viršija ${CAPACITY_PER_ROW} balų / vieno etato pajėgumą:
+      <ul style="margin:6px 0 0 18px;padding:0">
+        ${overloadedCells.slice(0,10).map(o => `<li><strong>${escapeHtml(o.row)}</strong> · ${o.month} — <strong>${o.score} balų</strong> (${o.count} pirkimai)</li>`).join("")}
+      </ul>
+      <div class="hint" style="margin-top:8px">💡 Apsvarstykite perkelti dalį pirkimų į gretimą mėnesį, sumažinti procedūros sudėtingumą (pvz. naudoti CPO, kur galima), arba sustiprinti komandą tame periode.</div>
+    </div></div>`;
+  }
+
+  wrap.innerHTML = html;
+}
+
+/* ==================== PERSPĖJIMŲ CENTRAS (v1.2 — nauja) ====================
+ * Automatiškai aptinka:
+ *   - Vėluojantis inicijavimas (inicijavimo data jau praėjo)
+ *   - Procedūros neatitikimas (jau yra validacijoje, čia agreguojama)
+ *   - Galimas skaidymas (CPV5 grupė tik su MV, bet suma > MV ribos)
+ *   - Galimi dublikatai (panašus objektas + ta pati įmonė)
+ */
+function computeWarnings(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const procs = DATA.procurements;
+  const warnings = {late:[], mismatch:[], split:[], duplicates:[]};
+
+  procs.forEach(p => {
+    // 1. Vėluojantis inicijavimas
+    const dInit = parseDate(p.inicData);
+    if(dInit && dInit < today){
+      const overdueDays = Math.floor((today - dInit) / 86400000);
+      warnings.late.push({p, overdueDays});
+    }
+    // 2. Procedūros neatitikimas (iš validateProc)
+    if(p.budas && p.verte && p.rusis){
+      const company = COMPANIES[p.imone] || COMPANIES["EPSO-G"];
+      const rec = recommendMethod(p.verte, p.rusis, company.law, false);
+      const chosen = mapMethodNameToCode(p.budas);
+      if(chosen){
+        const chosenCat = METHODS[chosen]?.cat;
+        const expectedCat = rec.category === "Tarptautinis" ? "t" : rec.category === "Supaprastintas" ? "s" : "mv";
+        if(chosenCat && chosenCat !== expectedCat && chosenCat !== "cpo" && chosenCat !== "dps"){
+          warnings.mismatch.push({p, chosen, recommended:rec.recommended});
+        }
+      }
+    }
+  });
+
+  // 3. Galimas skaidymas — CPV5 + įmonė + rūšis grupė kur visi yra MV bet suma > MV ribos
+  const splitGroups = {};
+  procs.forEach(p => {
+    const cpv = cpvKey(p.bvpz);
+    if(!cpv || cpv.length < 3) return;
+    const key = `${p.imone||"?"}|${cpv}|${p.rusis||"?"}`;
+    if(!splitGroups[key]) splitGroups[key] = {imone:p.imone, cpv5:cpv, rusis:p.rusis, items:[]};
+    splitGroups[key].items.push(p);
+  });
+  Object.values(splitGroups).forEach(g => {
+    if(g.items.length < 2) return;
+    const isWorks = g.rusis === "Darbai";
+    const mvLimit = isWorks ? 174000 : 70000;
+    const allMV = g.items.every(p => (p.verte||0) < mvLimit);
+    const totalValue = g.items.reduce((s,p)=>s+(p.verte||0), 0);
+    if(allMV && totalValue >= mvLimit){
+      warnings.split.push({...g, totalValue, mvLimit});
+    }
+  });
+
+  // 4. Dublikatai — panašus objektas + ta pati įmonė (Jaccard ≥ 0.5)
+  for(let i = 0; i < procs.length; i++){
+    for(let j = i+1; j < procs.length; j++){
+      if(procs[i].imone !== procs[j].imone) continue;
+      const tA = new Set(normTokens(procs[i].objektas));
+      const tB = new Set(normTokens(procs[j].objektas));
+      const sim = jaccard(tA, tB);
+      if(sim >= 0.5){
+        warnings.duplicates.push({a:procs[i], b:procs[j], similarity:Math.round(sim*100)});
+      }
+    }
+  }
+
+  return warnings;
+}
+
+function renderWarningCenter(){
+  const wrap = document.getElementById("warningCenter");
+  if(!wrap) return;
+  const w = computeWarnings();
+  const total = w.late.length + w.mismatch.length + w.split.length + w.duplicates.length;
+
+  if(DATA.procurements.length === 0){
+    wrap.innerHTML = `<div class="muted" style="text-align:center;padding:20px">Nėra duomenų. Importuokite arba įkelkite demonstracinius duomenis.</div>`;
+    return;
+  }
+  if(total === 0){
+    wrap.innerHTML = `<div class="alert" style="margin:0"><span class="alert-icon">✅</span><div class="alert-body"><strong>Perspėjimų nėra.</strong> Visi pirkimai turi tinkamas inicijavimo datas, atitinkančią procedūrą, jokio skaidymo ir dublikatų požymių.</div></div>`;
+    return;
+  }
+
+  let html = `<div class="grid grid-4" style="margin-top:10px">
+    <div class="kpi ${w.late.length?'warn':''}"><span class="kpi-label">Vėluojantis inicijavimas</span><span class="kpi-value">${w.late.length}</span></div>
+    <div class="kpi ${w.mismatch.length?'warn':''}"><span class="kpi-label">Procedūros neatitikimas</span><span class="kpi-value">${w.mismatch.length}</span></div>
+    <div class="kpi ${w.split.length?'bad':''}"><span class="kpi-label">Galimas skaidymas</span><span class="kpi-value">${w.split.length}</span></div>
+    <div class="kpi ${w.duplicates.length?'warn':''}"><span class="kpi-label">Galimi dublikatai</span><span class="kpi-value">${w.duplicates.length}</span></div>
+  </div>`;
+
+  if(w.late.length > 0){
+    html += `<h4 style="color:#a35c00;margin-top:14px">⏰ Vėluojantis inicijavimas (${w.late.length})</h4>`;
+    w.late.slice(0,5).forEach(({p, overdueDays}) => {
+      html += `<div class="alert warn" style="margin-bottom:6px"><span class="alert-icon">⏰</span><div class="alert-body">
+        <strong>${escapeHtml(p.nr||"?")}</strong> · <span class="badge gray">${p.imone||"?"}</span> ${escapeHtml((p.objektas||"").slice(0,60))}<br>
+        Inicijavimo data <strong>${escapeHtml(p.inicData||"")}</strong> jau praėjo prieš <strong>${overdueDays} d.</strong>
+        <button class="btn ghost sm" onclick="editProc('${p.id}')">✎ Atidaryti</button>
+      </div></div>`;
+    });
+    if(w.late.length > 5) html += `<div class="muted" style="text-align:center;margin:8px">...ir dar ${w.late.length - 5}</div>`;
+  }
+
+  if(w.mismatch.length > 0){
+    html += `<h4 style="color:#a35c00;margin-top:14px">⚖️ Procedūros neatitikimas (${w.mismatch.length})</h4>`;
+    w.mismatch.slice(0,5).forEach(({p, chosen, recommended}) => {
+      html += `<div class="alert warn" style="margin-bottom:6px"><span class="alert-icon">⚖️</span><div class="alert-body">
+        <strong>${escapeHtml(p.nr||"?")}</strong> · <span class="badge gray">${p.imone||"?"}</span> ${escapeHtml((p.objektas||"").slice(0,60))}<br>
+        Pasirinkta: <span class="badge yellow">${chosen}</span> · Rekomenduojama: <span class="badge green">${recommended}</span>
+        <button class="btn ghost sm" onclick="editProc('${p.id}')">✎ Atidaryti</button>
+      </div></div>`;
+    });
+    if(w.mismatch.length > 5) html += `<div class="muted" style="text-align:center;margin:8px">...ir dar ${w.mismatch.length - 5}</div>`;
+  }
+
+  if(w.split.length > 0){
+    html += `<h4 style="color:var(--raudona);margin-top:14px">🚩 Galimas skaidymas (${w.split.length})</h4>`;
+    w.split.slice(0,5).forEach(g => {
+      html += `<div class="alert error" style="margin-bottom:6px"><span class="alert-icon">🚩</span><div class="alert-body">
+        <strong>${g.imone}</strong> · CPV ${g.cpv5} · ${g.rusis} · ${g.items.length} pirkimai<br>
+        Visi MV (&lt;${fmtMoney(g.mvLimit)}), bet suma <strong>${fmtMoney(g.totalValue)}</strong> jau viršija MV ribą — galimas dirbtinis skaidymas.
+        <div class="muted">Pirkimai: ${g.items.map(p=>escapeHtml(p.nr||"?")).join(", ")}</div>
+        <button class="btn ghost sm" onclick="goTab('method');setTimeout(run20PercentAnalysis,300)">📊 Detali analizė</button>
+      </div></div>`;
+    });
+  }
+
+  if(w.duplicates.length > 0){
+    html += `<h4 style="color:#a35c00;margin-top:14px">📋 Galimi dublikatai (${w.duplicates.length})</h4>`;
+    w.duplicates.slice(0,5).forEach(({a, b, similarity}) => {
+      html += `<div class="alert warn" style="margin-bottom:6px"><span class="alert-icon">📋</span><div class="alert-body">
+        Panašumas <strong>${similarity}%</strong> · <span class="badge gray">${a.imone||"?"}</span><br>
+        <strong>${escapeHtml(a.nr||"?")}</strong>: ${escapeHtml((a.objektas||"").slice(0,55))}<br>
+        <strong>${escapeHtml(b.nr||"?")}</strong>: ${escapeHtml((b.objektas||"").slice(0,55))}<br>
+        <button class="btn ghost sm" onclick="editProc('${a.id}')">✎ A</button>
+        <button class="btn ghost sm" onclick="editProc('${b.id}')">✎ B</button>
+      </div></div>`;
+    });
+    if(w.duplicates.length > 5) html += `<div class="muted" style="text-align:center;margin:8px">...ir dar ${w.duplicates.length - 5}</div>`;
+  }
+
+  wrap.innerHTML = html;
+}
+
 /* ==================== DASHBOARD ==================== */
 let chartCo, chartTy, chartMe;
 function renderDashboard(){
+  renderWarningCenter();
   const procs=getFilteredProcs();
   document.getElementById("kpiCount").textContent=procs.length;
   document.getElementById("kpiValue").textContent=fmtMoney(procs.reduce((s,p)=>s+(p.verte||0),0));
@@ -1209,43 +1809,73 @@ function exportExcel(){
     });
     if(validations.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(validations), "Validacija");
   }
-  XLSX.writeFile(wb, `EPSO-G_MPP_${new Date().toISOString().slice(0,10)}.xlsx`);
+  XLSX.writeFile(wb, `EPSO-G_MPP_${fmtDate(new Date())}.xlsx`);
+}
+
+// PDF lietuviškų raidžių transliteravimas — jsPDF Helvetica nepalaiko ą,č,ę,ė,į,š,ų,ū,ž.
+// v1.2: visi PDF tekstai eina per šią funkciją, kad transliteravimas būtų nuoseklus.
+const TRANSLIT_MAP = {
+  "ą":"a","č":"c","ę":"e","ė":"e","į":"i","š":"s","ų":"u","ū":"u","ž":"z",
+  "Ą":"A","Č":"C","Ę":"E","Ė":"E","Į":"I","Š":"S","Ų":"U","Ū":"U","Ž":"Z",
+  "„":"\"","”":"\"","“":"\"","–":"-","—":"-","…":"..."," ":" "
+};
+function pdfText(s){
+  if(s == null) return "";
+  return String(s).replace(/[ąčęėįšųūžĄČĘĖĮŠŲŪŽ„”“–—… ]/g, ch => TRANSLIT_MAP[ch] || ch);
 }
 
 function exportPdf(){
   const type=document.getElementById("exportPdfType").value;
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:"landscape"});
-  const today=new Date().toISOString().slice(0,10);
+  const today=fmtDate(new Date());
   doc.setFillColor(0,160,114); doc.rect(0,0,297,18,"F");
   doc.setTextColor(255,255,255); doc.setFontSize(14); doc.setFont("helvetica","bold");
-  doc.text("EPSO-G grupes pirkimu planavimas",14,11);
+  doc.text(pdfText("EPSO-G grupės pirkimų planavimas"),14,11);
   doc.setFontSize(9); doc.setFont("helvetica","normal"); doc.text(today,270,11);
   doc.setTextColor(46,54,65);
+
+  // Informacinė juosta apie transliteravimą
+  doc.setFontSize(7); doc.setTextColor(115,116,131);
+  doc.text(pdfText("Pastaba: PDF eksporte lietuviški diakritiniai ženklai (ą,č,ę,ė,į,š,ų,ū,ž) yra transliteruojami į ASCII atitikmenis dėl jsPDF šrifto apribojimų."),14,22);
+  doc.setTextColor(46,54,65);
+
   if(type==="summary"){
     doc.setFontSize(16); doc.setFont("helvetica","bold");
-    doc.text("Vykdomoji santrauka",14,30);
-    const totals=Object.keys(COMPANIES).map(co=>{ const ps=DATA.procurements.filter(p=>p.imone===co); return [COMPANIES[co].name, ps.length, fmtMoney(ps.reduce((s,p)=>s+(p.verte||0),0))]; });
-    doc.autoTable({startY:36, head:[["Imone","Pirkimu sk.","Bendra verte"]], body:totals, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:10}});
+    doc.text(pdfText("Vykdomoji santrauka"),14,32);
+    const totals=Object.keys(COMPANIES).map(co=>{ const ps=DATA.procurements.filter(p=>p.imone===co); return [pdfText(COMPANIES[co].name), ps.length, pdfText(fmtMoney(ps.reduce((s,p)=>s+(p.verte||0),0)))]; });
+    doc.autoTable({startY:38, head:[[pdfText("Įmonė"), pdfText("Pirkimų sk."), pdfText("Bendra vertė")]], body:totals, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:10}});
     const total=DATA.procurements.reduce((s,p)=>s+(p.verte||0),0);
     doc.setFontSize(11); doc.setFont("helvetica","bold");
-    doc.text(`Bendra plano verte: ${fmtMoney(total)}`,14,doc.lastAutoTable.finalY+12);
-    doc.text(`Pirkimu is viso: ${DATA.procurements.length}`,14,doc.lastAutoTable.finalY+20);
+    doc.text(pdfText(`Bendra plano vertė: ${fmtMoney(total)}`),14,doc.lastAutoTable.finalY+12);
+    doc.text(pdfText(`Pirkimų iš viso: ${DATA.procurements.length}`),14,doc.lastAutoTable.finalY+20);
   }
   if(type==="full"){
-    doc.setFontSize(14); doc.setFont("helvetica","bold"); doc.text("Pilnas pirkimu sarasas",14,30);
-    const rows=DATA.procurements.map(p=>[p.nr||"", p.imone||"", (p.objektas||"").slice(0,40), fmtMoney(p.verte||0), p.rusis||"", (p.budas||"").slice(0,30), p.sutarciesData?String(p.sutarciesData).slice(0,10):""]);
-    doc.autoTable({startY:36, head:[["Nr.","Imone","Objektas","Verte","Rusis","Budas","Sutartis"]], body:rows, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:8}});
+    doc.setFontSize(14); doc.setFont("helvetica","bold"); doc.text(pdfText("Pilnas pirkimų sąrašas"),14,32);
+    const rows=DATA.procurements.map(p=>[pdfText(p.nr||""), pdfText(p.imone||""), pdfText((p.objektas||"").slice(0,40)), pdfText(fmtMoney(p.verte||0)), pdfText(p.rusis||""), pdfText((p.budas||"").slice(0,30)), p.sutarciesData?String(p.sutarciesData).slice(0,10):""]);
+    doc.autoTable({startY:38, head:[[pdfText("Nr."),pdfText("Įmonė"),pdfText("Objektas"),pdfText("Vertė"),pdfText("Rūšis"),pdfText("Būdas"),pdfText("Sutartis")]], body:rows, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:8}});
   }
   if(type==="central"){
-    doc.setFontSize(14); doc.setFont("helvetica","bold"); doc.text("Centralizavimo rekomendacijos",14,30);
-    const groups={};
-    DATA.procurements.forEach(p=>{ if(!p.bvpz) return; const c=String(p.bvpz).replace(/\D/g,"").slice(0,3); if(!c) return; if(!groups[c]) groups[c]={cpv3:c,items:[],companies:new Set()}; groups[c].items.push(p); groups[c].companies.add(p.imone||"?"); });
-    const rows=Object.values(groups).filter(g=>g.companies.size>=2).map(g=>{ const tv=g.items.reduce((s,p)=>s+(p.verte||0),0); const sy=g.companies.size>=3?25:15; return [g.cpv3, g.items.length, [...g.companies].join(", "), fmtMoney(tv), `~${fmtMoney(tv*sy/100)}`]; });
-    doc.autoTable({startY:46, head:[["CPV3","Pirkimu","Imones","Bendra verte","Galima sutaupyti"]], body:rows, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:9}});
+    doc.setFontSize(14); doc.setFont("helvetica","bold"); doc.text(pdfText("Centralizavimo rekomendacijos"),14,32);
+    // v1.2: naudojama TA PATI computeSynergy() formulė, kaip ekrane (CPV5 + Jaccard)
+    const clusters = buildCentralizationClusters();
+    const candidates = clusters
+      .filter(g => { const companies = new Set(g.items.map(p=>p.imone||"?")); return companies.size >= 2 || g.items.length >= 2; })
+      .map(computeSynergy)
+      .sort((a,b)=>b.score-a.score);
+    const rows = candidates.map(c => [
+      c.cpv5,
+      pdfText(c.label),
+      c.items.length,
+      pdfText(c.companies.join(", ")),
+      pdfText(fmtMoney(c.totalValue)),
+      `${c.synergyPct}%`,
+      pdfText(`~${fmtMoney(c.savings)}`)
+    ]);
+    doc.autoTable({startY:38, head:[[pdfText("CPV5"),pdfText("Klasteris"),pdfText("Pirkimų"),pdfText("Įmonės"),pdfText("Bendra vertė"),pdfText("Sinergija"),pdfText("Galima sutaupyti")]], body:rows, headStyles:{fillColor:[0,160,114],textColor:255}, styles:{font:"helvetica",fontSize:9}});
   }
   const pc=doc.getNumberOfPages();
-  for(let i=1;i<=pc;i++){ doc.setPage(i); doc.setFontSize(8); doc.setTextColor(115,116,131); doc.text(`EPSO-G grupe · MPP ataskaita · psl. ${i}/${pc}`,14,205); }
+  for(let i=1;i<=pc;i++){ doc.setPage(i); doc.setFontSize(8); doc.setTextColor(115,116,131); doc.text(pdfText(`EPSO-G grupė · MPP ataskaita · psl. ${i}/${pc}`),14,205); }
   doc.save(`EPSO-G_MPP_${type}_${today}.pdf`);
 }
 
