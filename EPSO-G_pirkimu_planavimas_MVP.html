@@ -160,16 +160,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
     <div class="card"><h3>Pirkimo objekto rūšys</h3><canvas id="chartByType" height="180"></canvas></div>
   </div>
   <div class="card"><h3>Pirkimo būdų pasiskirstymas</h3><canvas id="chartByMethod" height="120"></canvas></div>
-  <div class="card">
-    <h3>Greiti veiksmai</h3>
-    <div class="split">
-      <button class="btn" onclick="loadDemo()">▶ Įkelti demonstracinius duomenis (3 įmonės)</button>
-      <button class="btn secondary" onclick="goTab('import')">📥 Importuoti Excel iš Doclogix</button>
-      <button class="btn secondary" onclick="goTab('register');addNewProc()">➕ Pridėti pirkimą rankiniu būdu</button>
-      <button class="btn ghost" onclick="goTab('export')">📤 Eksportuoti planą</button>
-      <div class="split-end"><button class="btn danger sm" onclick="clearAll()" title="Pašalinti visus pirkimus iš plano">🗑️ Išvalyti planą</button></div>
-    </div>
-  </div>
+  <div id="emptyHint"></div>
 
   <div class="card">
     <div class="split">
@@ -1826,7 +1817,20 @@ function renderWarningCenter(){
 
 /* ==================== DASHBOARD ==================== */
 let chartCo, chartTy, chartMe;
+function renderEmptyHint(){
+  const wrap = document.getElementById("emptyHint");
+  if(!wrap) return;
+  if(DATA.procurements.length === 0){
+    wrap.innerHTML = `<div class="alert info" style="margin-bottom:16px"><span class="alert-icon">👋</span><div class="alert-body">
+      <div class="alert-title">Pradėkite nuo duomenų</div>
+      Planas tuščias. Galite <button class="btn ghost sm" style="padding:2px 8px" onclick="loadDemo()">▶ įkelti demo duomenis</button> arba pereiti į <button class="btn ghost sm" style="padding:2px 8px" onclick="goTab('import')">📥 Importas</button> ir įkelti savo Excel iš Doclogix.
+    </div></div>`;
+  } else {
+    wrap.innerHTML = "";
+  }
+}
 function renderDashboard(){
+  renderEmptyHint();
   renderWarningCenter();
   const procs=getFilteredProcs();
   document.getElementById("kpiCount").textContent=procs.length;
