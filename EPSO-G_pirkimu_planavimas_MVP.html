@@ -113,6 +113,65 @@ textarea{min-height:60px;resize:vertical}
 .progress > div{height:100%;background:var(--smaragdas);transition:.3s}
 .debug-log{font-family:monospace;font-size:11px;background:#0F5265;color:#cdffdb;padding:10px 14px;border-radius:8px;margin-top:8px;white-space:pre-wrap;max-height:240px;overflow:auto}
 footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
+
+/* ==================== G-PROCURE PAGALBOS KOMPONENTAS (start) ====================
+   Portabilus dviejų lygių pagalbos komponentas: sutraukiamas „intro" blokas + modalinis langas.
+   Perkeliant į kitą G-Procure modulį — kopijuokite šį CSS bloką, HTML bloką (2 vnt.) ir JS IIFE.
+   Keisti reikia TIK tekstinį turinį HTML dalyje ir schemos žingsnius. Struktūra/stilius vienodi. */
+.gph-intro{background:var(--white);border:1px solid var(--grafitas-15);border-left:4px solid var(--smaragdas);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.gph-intro-head{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;user-select:none}
+.gph-intro-head:hover{background:var(--grafitas-5)}
+.gph-i{width:34px;height:34px;border-radius:9px;background:var(--smaragdas-5);color:var(--smaragdas);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.gph-intro-head h3{margin:0;font-size:15px;color:var(--grafitas);font-weight:800}
+.gph-sub{font-size:12px;color:var(--grafitas-50);font-weight:400}
+.gph-spacer{flex:1}
+.gph-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.gph-chevron{display:inline-block;transition:transform .2s;font-size:11px}
+.gph-intro.collapsed .gph-chevron{transform:rotate(-90deg)}
+.gph-body{padding:2px 20px 18px 66px}
+.gph-intro.collapsed .gph-body{display:none}
+.gph-steps{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:12px 0}
+.gph-step{display:flex;gap:10px;align-items:flex-start;font-size:12.5px}
+.gph-step .n{width:22px;height:22px;border-radius:50%;background:var(--smaragdas);color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gph-step b{color:var(--grafitas)}
+.gph-note{background:var(--smaragdas-5);border-left:3px solid var(--smaragdas);border-radius:8px;padding:10px 14px;font-size:12px;margin-top:6px}
+/* --- 2 lygis: modalinis langas --- */
+.gph-overlay{position:fixed;inset:0;background:rgba(46,54,65,.6);display:none;align-items:flex-start;justify-content:center;z-index:200;padding:30px 16px;overflow-y:auto;backdrop-filter:blur(4px)}
+.gph-overlay.show{display:flex}
+.gph-modal{background:var(--white);border-radius:16px;width:100%;max-width:900px;box-shadow:var(--shadow-lg);overflow:hidden;animation:slide .25s ease;margin:auto 0;outline:none}
+.gph-modal-head{background:linear-gradient(96deg,var(--grafitas) 0%,#0F5265 60%,var(--smaragdas-120) 100%);color:#fff;padding:22px 28px;display:flex;align-items:flex-start;gap:14px}
+.gph-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.6px;opacity:.85;font-weight:700}
+.gph-modal-head h2{color:#fff;margin:4px 0 0;font-size:20px;font-weight:800}
+.gph-close{margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);color:#fff;width:36px;height:36px;border-radius:9px;font-size:16px;cursor:pointer;flex-shrink:0;line-height:1;transition:.15s}
+.gph-close:hover{background:rgba(255,255,255,.3)}
+.gph-close:focus-visible,.gph-modal :focus-visible{outline:2px solid var(--smaragdas-50);outline-offset:2px}
+.gph-modal-scroll{padding:24px 28px 28px}
+.gph-modal-scroll h3{margin:24px 0 8px}
+.gph-modal-scroll h3:first-child{margin-top:0}
+.gph-modal-scroll p{font-size:13px;margin:6px 0}
+.gph-flow{display:flex;flex-wrap:wrap;gap:14px 18px;margin:10px 0 4px}
+.gph-flow-node{flex:1 1 130px;min-width:130px;background:var(--smaragdas-5);border:1px solid var(--smaragdas-15);border-radius:12px;padding:12px 13px;position:relative}
+.gph-flow-node .n{width:24px;height:24px;border-radius:50%;background:var(--smaragdas);color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.gph-flow-node .t{font-weight:700;font-size:13px;color:var(--grafitas)}
+.gph-flow-node .d{font-size:11.5px;color:var(--grafitas-50);margin-top:3px;line-height:1.35}
+.gph-flow-node:not(:last-child)::after{content:"›";position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--smaragdas);font-size:24px;font-weight:800;line-height:1}
+@media(max-width:600px){.gph-flow-node:not(:last-child)::after{content:"⌄";right:auto;left:50%;top:auto;bottom:-16px;transform:translateX(-50%)}}
+.gph-concept-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:8px}
+.gph-concept{border:1px solid var(--grafitas-15);border-radius:10px;padding:12px 14px;background:var(--white)}
+.gph-concept .term{font-weight:800;color:var(--smaragdas-120);font-size:13px}
+.gph-concept .def{font-size:12.5px;margin-top:3px}
+.gph-concept .ex{font-size:11.5px;color:var(--grafitas-50);margin-top:6px;border-top:1px dashed var(--grafitas-15);padding-top:6px}
+.gph-faq{margin-top:8px}
+.gph-faq details{border:1px solid var(--grafitas-15);border-radius:9px;margin-bottom:8px;overflow:hidden}
+.gph-faq summary{padding:11px 14px;font-weight:700;font-size:13px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:9px;color:var(--grafitas)}
+.gph-faq summary::-webkit-details-marker{display:none}
+.gph-faq summary::before{content:"+";color:var(--smaragdas);font-weight:800;font-size:16px;width:14px;text-align:center}
+.gph-faq details[open] summary::before{content:"\2212"}
+.gph-faq details[open] summary{background:var(--smaragdas-5)}
+.gph-faq .ans{padding:0 14px 12px 37px;font-size:12.5px;color:var(--grafitas)}
+.gph-modal-foot{padding:16px 28px;border-top:1px solid var(--grafitas-15);display:flex;justify-content:flex-end;background:var(--grafitas-5)}
+body.gph-noscroll{overflow:hidden}
+/* ==================== G-PROCURE PAGALBOS KOMPONENTAS (CSS pabaiga) ==================== */
 </style>
 </head>
 <body>
@@ -146,6 +205,44 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 </nav>
 
 <main>
+
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 1 lygis: intro blokas (start) ============
+     Perkeliama į kitą modulį: keiskite tik tekstą tarp žymų. Struktūra ir klasės nekinta. -->
+<div class="gph-intro" id="gphIntro">
+  <div class="gph-intro-head" id="gphHead">
+    <div class="gph-i">❔</div>
+    <div>
+      <h3>Kas tai ir kaip naudotis</h3>
+      <div class="gph-sub">Trumpa modulio paskirtis ir naudojimo žingsniai</div>
+    </div>
+    <div class="gph-spacer"></div>
+    <div class="gph-actions">
+      <button class="btn ghost sm" id="gphMore" type="button" aria-haspopup="dialog">ℹ️ Plačiau</button>
+      <button class="btn secondary sm" id="gphToggle" type="button" aria-expanded="true" aria-controls="gphBody">
+        <span class="gph-chevron">▾</span> <span class="gph-tg-txt">Suskleisti</span>
+      </button>
+    </div>
+  </div>
+  <div class="gph-body" id="gphBody">
+    <p style="margin:6px 0 0;font-size:13px">
+      Šis modulis padeda EPSO-G grupės pirkimų specialistams sudaryti, patikrinti ir centralizuoti
+      <b>metinį pirkimų planą (MPP)</b> — nuo duomenų įkėlimo iki pirkimo būdo, terminų ir grupinių pirkimų galimybių.
+    </p>
+    <div class="gph-steps">
+      <div class="gph-step"><span class="n">1</span><span><b>Įkelkite arba įveskite.</b> Importuokite Doclogix Excel arba pridėkite pirkimus registre.</span></div>
+      <div class="gph-step"><span class="n">2</span><span><b>Patikrinkite.</b> Validacija realiu laiku pažymi trūkstamus laukus ir neatitikimus.</span></div>
+      <div class="gph-step"><span class="n">3</span><span><b>Parinkite būdą.</b> Pirkimo būdo analizė pasiūlo būdą pagal VPT ribas ir 20 % taisyklę.</span></div>
+      <div class="gph-step"><span class="n">4</span><span><b>Suskaičiuokite terminus.</b> Atgalinė skaičiuoklė nuo sutarties datos (A/B grafikas).</span></div>
+      <div class="gph-step"><span class="n">5</span><span><b>Centralizuokite ir eksportuokite.</b> Peržiūrėkite grupinių pirkimų galimybes, eksportuokite Excel/PDF.</span></div>
+    </div>
+    <div class="gph-note">
+      <b>Duomenys ir taisyklės.</b> Visi duomenys saugomi tik Jūsų naršyklėje (localStorage) — niekur neperduodami.
+      VPT vertės ribos galioja nuo 2026-01-01; darbo dienų ir LR švenčių kalendorius — 2026–2027 m.
+      Atnaujinus ribas ar šventes, modulį reikia atnaujinti.
+    </div>
+  </div>
+</div>
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 1 lygis (pabaiga) ============ -->
 
 <section class="section active" id="sec-dashboard">
   <h2>Apžvalga<span class="h2-sub">Bendras grupės metinio pirkimų plano vaizdas</span></h2>
@@ -421,6 +518,109 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 </main>
 
 <div class="modal-overlay" id="modal"><div class="modal" id="modalContent"></div></div>
+
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 2 lygis: modalinis langas (start) ============
+     Perkeliama į kitą modulį: keiskite tik tekstą, schemos žingsnius, sąvokas ir DUK. -->
+<div class="gph-overlay" id="gphOverlay" role="dialog" aria-modal="true" aria-labelledby="gphModalTitle" aria-hidden="true">
+  <div class="gph-modal" tabindex="-1">
+    <div class="gph-modal-head">
+      <div>
+        <div class="gph-eyebrow">G-Procure · Naudojimo instrukcija</div>
+        <h2 id="gphModalTitle">Pirkimų planavimo įrankis — išsami instrukcija</h2>
+      </div>
+      <button class="gph-close" data-gph-close type="button" aria-label="Uždaryti langą">✕</button>
+    </div>
+    <div class="gph-modal-scroll">
+
+      <h3>Kam skirtas šis modulis</h3>
+      <p>
+        EPSO-G grupę sudaro keturios pirkimo procedūras vykdančios įmonės — UAB EPSO-G (perkančioji
+        organizacija pagal VPĮ) bei LITGRID AB, AB Amber Grid ir UAB Energy cells (perkantieji subjektai
+        pagal PĮ). Kiekviena planuoja pirkimus atskirai, todėl persidengiantys poreikiai lieka nepastebėti,
+        pirkimo būdas neretai parenkamas „iš atminties", o terminai skaičiuojami ranka.
+      </p>
+      <p>
+        Modulis šias rizikas mažina sistemingai: automatiškai siūlo pirkimo būdą pagal galiojančias VPT
+        vertės ribas, kontroliuoja <b>VPT 20 % taisyklę</b> ir signalizuoja apie galimą dirbtinį pirkimo
+        skaidymą, skaičiuoja terminus darbo dienomis su LR švenčių kalendoriumi ir algoritmiškai aptinka
+        pirkimus, kuriuos verta centralizuoti grupės lygmeniu. Tai padeda pasiruošti VPT auditui, išvengti
+        procedūrinių klaidų ir pasinaudoti grupės masto ekonomija.
+      </p>
+
+      <h3>Proceso schema</h3>
+      <div class="gph-flow">
+        <div class="gph-flow-node"><div class="n">1</div><div class="t">Importas</div><div class="d">Doclogix Excel arba rankinis įvedimas į registrą.</div></div>
+        <div class="gph-flow-node"><div class="n">2</div><div class="t">Validacija</div><div class="d">10+ taisyklių patikrina laukus ir datų logiką.</div></div>
+        <div class="gph-flow-node"><div class="n">3</div><div class="t">Pirkimo būdas</div><div class="d">Rekomendacija pagal VPT ribas ir 20 % taisyklę.</div></div>
+        <div class="gph-flow-node"><div class="n">4</div><div class="t">Terminai</div><div class="d">Atgalinis skaičiavimas darbo dienomis (A/B).</div></div>
+        <div class="gph-flow-node"><div class="n">5</div><div class="t">Centralizavimas</div><div class="d">CPV5 + Jaccard aptinka grupinius pirkimus.</div></div>
+        <div class="gph-flow-node"><div class="n">6</div><div class="t">Eksportas</div><div class="d">Excel ir PDF ataskaitos su EPSO-G stiliumi.</div></div>
+      </div>
+
+      <h3>Pagrindinės sąvokos</h3>
+      <div class="gph-concept-grid">
+        <div class="gph-concept">
+          <div class="term">VPĮ ir PĮ</div>
+          <div class="def">Du pirkimų teisės aktai. VPĮ taikomas perkančiosioms organizacijoms, PĮ — perkantiesiems subjektams. Skiriasi vertės ribos.</div>
+          <div class="ex">Pvz.: UAB EPSO-G → VPĮ; LITGRID, Amber Grid, Energy cells → PĮ.</div>
+        </div>
+        <div class="gph-concept">
+          <div class="term">Mažos vertės pirkimas (MV)</div>
+          <div class="def">Supaprastinta procedūra, kai numatoma vertė neviršija VPT mažos vertės ribos.</div>
+          <div class="ex">Pvz.: prekės/paslaugos iki 70 000 €, darbai iki 174 000 € (be PVM).</div>
+        </div>
+        <div class="gph-concept">
+          <div class="term">BVPŽ / CPV5</div>
+          <div class="def">Bendrasis viešųjų pirkimų žodynas — pirkimo objekto kodas. CPV5 — pirmi 5 skaitmenys, naudojami panašiems pirkimams grupuoti.</div>
+          <div class="ex">Pvz.: 30232130-4 → CPV5 „30232" (spausdintuvai).</div>
+        </div>
+        <div class="gph-concept">
+          <div class="term">VPT 20 % taisyklė</div>
+          <div class="def">Net pasiekus tarptautinio pirkimo ribą, dalį mažesnių pirkimų galima vykdyti supaprastintai, jei jų suma neviršija 20 % bendros tos grupės vertės.</div>
+          <div class="ex">Pvz.: dalys iki 80 000 € (prekės/paslaugos) arba 1 000 000 € (darbai).</div>
+        </div>
+        <div class="gph-concept">
+          <div class="term">A ir B grafikas</div>
+          <div class="def">Terminų skaičiavimo režimai. A — tikslūs VPT terminai be rezervo; B — su +20 % buferiu deryboms ir nenumatytiems delsimams.</div>
+          <div class="ex">Pvz.: rizikingam pirkimui rinkitės B, kad liktų laiko atsakymams į klausimus.</div>
+        </div>
+        <div class="gph-concept">
+          <div class="term">Centralizavimas (CPV5 + Jaccard)</div>
+          <div class="def">Algoritmas jungia kelių įmonių panašius pirkimus į vieną bendrą: CPV5 atrenka tą pačią objekto sritį, Jaccard panašumas vertina pavadinimą.</div>
+          <div class="ex">Pvz.: trijų įmonių IT licencijų pirkimai → vienas grupinis pirkimas.</div>
+        </div>
+      </div>
+
+      <h3>Dažniausi klausimai (DUK)</h3>
+      <div class="gph-faq">
+        <details>
+          <summary>Kur saugomi mano duomenys?</summary>
+          <div class="ans">Tik Jūsų naršyklėje (localStorage). Į serverį niekas neperduodama, tarp seansų išsisaugo. Ištrynus naršyklės duomenis — viskas dingsta, todėl svarbius planus eksportuokite į Excel.</div>
+        </details>
+        <details>
+          <summary>Iš kur imamos VPT vertės ribos?</summary>
+          <div class="ans">Ribos įrašytos modulyje ir galioja nuo 2026-01-01. VPT jas atnaujina (paprastai kas 2 metus) — tada reikia atnaujinti modulį.</div>
+        </details>
+        <details>
+          <summary>Kuo skiriasi A ir B grafikas?</summary>
+          <div class="ans">A grafikas naudoja tikslius VPT terminus be rezervo. B grafikas prideda +20 % buferį deryboms, atsakymams į tiekėjų klausimus ir nenumatytiems delsimams.</div>
+        </details>
+        <details>
+          <summary>Kaip modulis aptinka centralizavimo galimybes?</summary>
+          <div class="ans">Pirkimai grupuojami pagal CPV5, klasterizuojami pagal pavadinimo Jaccard panašumą ir vertinamas sutarčių datų derinimas. Rezultatas — kandidatų kortelės su galima sutaupyti suma.</div>
+        </details>
+        <details>
+          <summary>Ar šis įrankis pakeičia Doclogix ar CVP IS?</summary>
+          <div class="ans">Ne. Tai planavimo ir analizės įrankis (MVP), kuris importuoja ir eksportuoja Excel/PDF. Tiesioginė API integracija su Doclogix ir CVP IS numatyta ateities etapuose.</div>
+        </details>
+      </div>
+    </div>
+    <div class="gph-modal-foot">
+      <button class="btn" data-gph-close type="button">Uždaryti ir grįžti į modulį</button>
+    </div>
+  </div>
+</div>
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 2 lygis (pabaiga) ============ -->
 
 <footer>
   EPSO-G grupės pirkimų planavimo įrankis · MVP v1.1 · Duomenys saugomi tik naršyklėje<br>
@@ -1987,6 +2187,82 @@ function loadDemo(){
   if(el) el.addEventListener("input", ()=>{ renderRegister(); renderDashboard(); renderValidation(); renderMethodAudit(); });
 });
 document.getElementById("modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
+
+/* ==================== G-PROCURE PAGALBOS KOMPONENTAS — elgsena (portabilu) ====================
+   Savarankiškas IIFE: nekeičia jokių globalių kintamųjų. Perkeliant į kitą modulį — kopijuokite
+   šį bloką kartu su CSS ir HTML dalimis. Norint atskiros sutraukimo būsenos — keiskite STORE_KEY. */
+(function(){
+  var STORE_KEY = "gprocure_help_collapsed";
+  var intro   = document.getElementById("gphIntro");
+  var overlay = document.getElementById("gphOverlay");
+  var modal   = overlay ? overlay.querySelector(".gph-modal") : null;
+  var openBtn = document.getElementById("gphMore");
+  var lastFocus = null;
+
+  /* --- 1 lygis: sutraukiamas blokas, būsena išsaugoma localStorage --- */
+  if(intro){
+    var head   = document.getElementById("gphHead");
+    var toggle = document.getElementById("gphToggle");
+    function setCollapsed(c){
+      intro.classList.toggle("collapsed", c);
+      if(toggle){
+        toggle.setAttribute("aria-expanded", String(!c));
+        var txt = toggle.querySelector(".gph-tg-txt");
+        if(txt) txt.textContent = c ? "Išskleisti" : "Suskleisti";
+      }
+      try{ localStorage.setItem(STORE_KEY, c ? "1" : "0"); }catch(e){}
+    }
+    var saved = "0"; try{ saved = localStorage.getItem(STORE_KEY) || "0"; }catch(e){}
+    setCollapsed(saved === "1");
+    function flip(){ setCollapsed(!intro.classList.contains("collapsed")); }
+    if(head) head.addEventListener("click", function(e){
+      if(e.target.closest("#gphMore") || e.target.closest("#gphToggle")) return;
+      flip();
+    });
+    if(toggle) toggle.addEventListener("click", function(e){ e.stopPropagation(); flip(); });
+  }
+
+  /* --- 2 lygis: modalinis langas --- */
+  if(overlay && modal){
+    function getFocusable(){
+      return Array.prototype.slice.call(modal.querySelectorAll(
+        'a[href],button:not([disabled]),textarea,input,select,summary,[tabindex]:not([tabindex="-1"])'
+      )).filter(function(el){ return el.offsetParent !== null || el === document.activeElement; });
+    }
+    function openModal(){
+      lastFocus = document.activeElement;
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.classList.add("gph-noscroll");
+      var c = modal.querySelector(".gph-close");
+      (c || modal).focus();
+    }
+    function closeModal(){
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("gph-noscroll");
+      if(lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+    }
+    if(openBtn) openBtn.addEventListener("click", function(e){ e.stopPropagation(); openModal(); });
+    overlay.addEventListener("click", function(e){ if(e.target === overlay) closeModal(); });
+    overlay.querySelectorAll("[data-gph-close]").forEach(function(b){
+      b.addEventListener("click", closeModal);
+    });
+    document.addEventListener("keydown", function(e){
+      if(!overlay.classList.contains("show")) return;
+      if(e.key === "Escape"){ e.preventDefault(); closeModal(); return; }
+      if(e.key === "Tab"){
+        var f = getFocusable();
+        if(!f.length){ e.preventDefault(); modal.focus(); return; }
+        var first = f[0], last = f[f.length - 1];
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+        else if(!modal.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+      }
+    });
+  }
+})();
+/* ==================== G-PROCURE PAGALBOS KOMPONENTAS — elgsena (pabaiga) ==================== */
 
 /* ==================== INIT ==================== */
 load();
