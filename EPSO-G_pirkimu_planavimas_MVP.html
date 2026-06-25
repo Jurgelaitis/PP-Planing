@@ -116,7 +116,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--grafitas-50)}
 
 /* ==================== G-PROCURE PAGALBOS KOMPONENTAS (start) ====================
    Portabilus dviejų lygių pagalbos komponentas: sutraukiamas „intro" blokas + modalinis langas.
-   Perkeliant į kitą G-Procure modulį — kopijuokite šį CSS bloką, HTML bloką (2 vnt.) ir JS IIFE.
+   Perkeliant į kitą G-Procure modulį - kopijuokite šį CSS bloką, HTML bloką (2 vnt.) ir JS IIFE.
    Keisti reikia TIK tekstinį turinį HTML dalyje ir schemos žingsnius. Struktūra/stilius vienodi. */
 .gph-intro{background:var(--white);border:1px solid var(--grafitas-15);border-left:4px solid var(--smaragdas);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
 .gph-intro-head{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;user-select:none}
@@ -206,7 +206,7 @@ body.gph-noscroll{overflow:hidden}
 
 <main>
 
-<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 1 lygis: intro blokas (start) ============
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS - 1 lygis: intro blokas (start) ============
      Perkeliama į kitą modulį: keiskite tik tekstą tarp žymų. Struktūra ir klasės nekinta. -->
 <div class="gph-intro" id="gphIntro">
   <div class="gph-intro-head" id="gphHead">
@@ -226,7 +226,7 @@ body.gph-noscroll{overflow:hidden}
   <div class="gph-body" id="gphBody">
     <p style="margin:6px 0 0;font-size:13px">
       Šis modulis padeda EPSO-G grupės pirkimų specialistams sudaryti, patikrinti ir centralizuoti
-      <b>metinį pirkimų planą (MPP)</b> — nuo duomenų įkėlimo iki pirkimo būdo, terminų ir grupinių pirkimų galimybių.
+      <b>metinį pirkimų planą (MPP)</b> - nuo duomenų įkėlimo iki pirkimo būdo, terminų ir grupinių pirkimų galimybių.
     </p>
     <div class="gph-steps">
       <div class="gph-step"><span class="n">1</span><span><b>Įkelkite arba įveskite.</b> Importuokite Doclogix Excel arba pridėkite pirkimus registre.</span></div>
@@ -236,13 +236,13 @@ body.gph-noscroll{overflow:hidden}
       <div class="gph-step"><span class="n">5</span><span><b>Centralizuokite ir eksportuokite.</b> Peržiūrėkite grupinių pirkimų galimybes, eksportuokite Excel/PDF.</span></div>
     </div>
     <div class="gph-note">
-      <b>Duomenys ir taisyklės.</b> Visi duomenys saugomi tik Jūsų naršyklėje (localStorage) — niekur neperduodami.
-      VPT vertės ribos galioja nuo 2026-01-01; darbo dienų ir LR švenčių kalendorius — 2026–2027 m.
+      <b>Duomenys ir taisyklės.</b> Visi duomenys saugomi tik Jūsų naršyklėje (localStorage) - niekur neperduodami.
+      VPT vertės ribos galioja nuo 2026-01-01; darbo dienų ir LR švenčių kalendorius - 2026–2027 m.
       Atnaujinus ribas ar šventes, modulį reikia atnaujinti.
     </div>
   </div>
 </div>
-<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 1 lygis (pabaiga) ============ -->
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS - 1 lygis (pabaiga) ============ -->
 
 <section class="section active" id="sec-dashboard">
   <h2>Apžvalga<span class="h2-sub">Bendras grupės metinio pirkimų plano vaizdas</span></h2>
@@ -262,7 +262,7 @@ body.gph-noscroll{overflow:hidden}
   <div class="card">
     <div class="split">
       <h3 style="margin:0">🚨 Perspėjimų centras</h3>
-      <span class="badge green" style="margin-left:6px">v1.2 — nauja</span>
+      <span class="badge green" style="margin-left:6px">v1.2 - nauja</span>
     </div>
     <p class="muted" style="margin-top:4px">Automatiškai aptinka: vėluojantį inicijavimą, procedūros neatitikimą, galimą skaidymą, dublikatus.</p>
     <div id="warningCenter"></div>
@@ -275,7 +275,7 @@ body.gph-noscroll{overflow:hidden}
       automatinę pirkimo būdo analizę pagal VPT vertės ribas (galiojančias nuo 2026-01-01), terminų skaičiuoklę pagal
       pirkimo grafiko tipą (A/B), grupės centralizavimo AI rekomendacijas ir VPT 20% taisyklės kontrolę.
       <br><br>
-      <strong>v1.1 patobulinimai:</strong> ištaisytas Excel importas — dabar automatiškai aptinka antraštės eilutę
+      <strong>v1.1 patobulinimai:</strong> ištaisytas Excel importas - dabar automatiškai aptinka antraštės eilutę
       (1, 2, 3 ar gilesnė), tinkamai apdoroja JAV ir Europos formato skaičius (14,900.00 € arba 14.900,00 €),
       praleidžia ne duomenų lapus (instrukcija, katalogas), pateikia detalų importo žurnalą.
       <br><br>
@@ -285,7 +285,7 @@ body.gph-noscroll{overflow:hidden}
 </section>
 
 <section class="section" id="sec-import">
-  <h2>Excel importas iš Doclogix DVS<span class="h2-sub">Įkelkite metinio pirkimų plano (MPP) Excel failą — automatiškai atpažinsime laukus</span></h2>
+  <h2>Excel importas iš Doclogix DVS<span class="h2-sub">Įkelkite metinio pirkimų plano (MPP) Excel failą - automatiškai atpažinsime laukus</span></h2>
   <div id="importPrewarning"></div>
   <div class="card">
     <div class="dropzone" id="dz">
@@ -325,7 +325,7 @@ body.gph-noscroll{overflow:hidden}
     </div>
     <div class="hint" style="margin-top:14px">
       💡 <strong>Patarimas:</strong> Įrankis taip pat priima naują rekomenduojamą lauką <em>„Įmonė"</em> (EPSO-G/LITGRID/AMBER/ECELLS).
-      Jei jo Excel faile nėra — bus naudojama viršuje pasirinkta įmonė.
+      Jei jo Excel faile nėra - bus naudojama viršuje pasirinkta įmonė.
     </div>
   </div>
 </section>
@@ -346,7 +346,7 @@ body.gph-noscroll{overflow:hidden}
 </section>
 
 <section class="section" id="sec-validation">
-  <h2>Duomenų validacija<span class="h2-sub">Automatinis pirminių duomenų patikrinimas — neatitikimai, trūkumai, anomalijos</span></h2>
+  <h2>Duomenų validacija<span class="h2-sub">Automatinis pirminių duomenų patikrinimas - neatitikimai, trūkumai, anomalijos</span></h2>
   <div id="validationFilterBanner"></div>
   <div class="grid grid-3" id="validationKpi">
     <div class="kpi"><span class="kpi-label">✅ Korektiški</span><span class="kpi-value" id="vOK">0</span></div>
@@ -401,13 +401,13 @@ body.gph-noscroll{overflow:hidden}
   <div class="card">
     <div class="split">
       <h3 style="margin:0">20% taisyklės portfelio kontrolė</h3>
-      <span class="badge green" style="margin-left:6px">v1.2 — nauja</span>
+      <span class="badge green" style="margin-left:6px">v1.2 - nauja</span>
       <div class="split-end">
         <button class="btn secondary sm" onclick="run20PercentAnalysis()">🔄 Perskaičiuoti</button>
       </div>
     </div>
     <p class="muted">Grupuoja pirkimus pagal CPV5 + įmonę ir tikrina, ar atskirų dalių (mažesnių už 80 000 € prekių/paslaugų arba 1 000 000 € darbų) bendra vertė neviršija 20 % bendro pirkimo (visų to paties tipo dalių) vertės. Taip pat aptinka galimą skaidymą (kelis MV pirkimus, kurių suma jau pasiekia tarpt. ribą).</p>
-    <div id="rule20Result"><div class="empty"><div class="icon">📊</div>Spauskite „Perskaičiuoti" — algoritmas peržiūrės visą plano portfelį.</div></div>
+    <div id="rule20Result"><div class="empty"><div class="icon">📊</div>Spauskite „Perskaičiuoti" - algoritmas peržiūrės visą plano portfelį.</div></div>
   </div>
   <div class="card">
     <h3>Visų plane esančių pirkimų būdo audito ataskaita</h3>
@@ -457,7 +457,7 @@ body.gph-noscroll{overflow:hidden}
       <h3 style="margin:0">Centralizavimo kandidatų sąrašas</h3>
       <div class="split-end"><button class="btn" onclick="runCentralAnalysis()">🤝 Atlikti analizę</button></div>
     </div>
-    <div id="centralResult" style="margin-top:14px"><div class="empty"><div class="icon">🤝</div>Spauskite „Atlikti analizę" — algoritmas peržiūrės visų įmonių pirkimus.</div></div>
+    <div id="centralResult" style="margin-top:14px"><div class="empty"><div class="icon">🤝</div>Spauskite „Atlikti analizę" - algoritmas peržiūrės visų įmonių pirkimus.</div></div>
   </div>
 </section>
 
@@ -470,7 +470,7 @@ body.gph-noscroll{overflow:hidden}
         <strong>CPO</strong> = 1 · <strong>MV-NZ</strong> = 1 · <strong>MV-NR</strong> = 2 · <strong>MV-SAB/SAD</strong> = 3<br>
         <strong>Supaprastintas</strong> = 4-5 · <strong>Tarptautinis</strong> = 7-10 · <strong>DPS</strong> = 2-3
       </div>
-      <div>Pajėgumo balas = mėnesyje suplanuotų pirkimų sudėtingumo balų suma. Vizualizuojama kaip „šilumos žemėlapis" — kuo tamsesnis langelis, tuo didesnis pajėgumo poreikis.</div>
+      <div>Pajėgumo balas = mėnesyje suplanuotų pirkimų sudėtingumo balų suma. Vizualizuojama kaip „šilumos žemėlapis" - kuo tamsesnis langelis, tuo didesnis pajėgumo poreikis.</div>
       <div>Vienos eilutės pajėgumas paprastai laikomas <strong>30 balų/mėn.</strong> Šis dydis prilygsta vienam pilnam etatui. Galite koreguoti pagal Jūsų komandos dydį.</div>
     </div>
   </div>
@@ -519,14 +519,14 @@ body.gph-noscroll{overflow:hidden}
 
 <div class="modal-overlay" id="modal"><div class="modal" id="modalContent"></div></div>
 
-<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 2 lygis: modalinis langas (start) ============
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS - 2 lygis: modalinis langas (start) ============
      Perkeliama į kitą modulį: keiskite tik tekstą, schemos žingsnius, sąvokas ir DUK. -->
 <div class="gph-overlay" id="gphOverlay" role="dialog" aria-modal="true" aria-labelledby="gphModalTitle" aria-hidden="true">
   <div class="gph-modal" tabindex="-1">
     <div class="gph-modal-head">
       <div>
         <div class="gph-eyebrow">G-Procure · Naudojimo instrukcija</div>
-        <h2 id="gphModalTitle">Pirkimų planavimo įrankis — išsami instrukcija</h2>
+        <h2 id="gphModalTitle">Pirkimų planavimo įrankis - išsami instrukcija</h2>
       </div>
       <button class="gph-close" data-gph-close type="button" aria-label="Uždaryti langą">✕</button>
     </div>
@@ -534,7 +534,7 @@ body.gph-noscroll{overflow:hidden}
 
       <h3>Kam skirtas šis modulis</h3>
       <p>
-        EPSO-G grupę sudaro keturios pirkimo procedūras vykdančios įmonės — UAB EPSO-G (perkančioji
+        EPSO-G grupę sudaro keturios pirkimo procedūras vykdančios įmonės - UAB EPSO-G (perkančioji
         organizacija pagal VPĮ) bei LITGRID AB, AB Amber Grid ir UAB Energy cells (perkantieji subjektai
         pagal PĮ). Kiekviena planuoja pirkimus atskirai, todėl persidengiantys poreikiai lieka nepastebėti,
         pirkimo būdas neretai parenkamas „iš atminties", o terminai skaičiuojami ranka.
@@ -561,7 +561,7 @@ body.gph-noscroll{overflow:hidden}
       <div class="gph-concept-grid">
         <div class="gph-concept">
           <div class="term">VPĮ ir PĮ</div>
-          <div class="def">Du pirkimų teisės aktai. VPĮ taikomas perkančiosioms organizacijoms, PĮ — perkantiesiems subjektams. Skiriasi vertės ribos.</div>
+          <div class="def">Du pirkimų teisės aktai. VPĮ taikomas perkančiosioms organizacijoms, PĮ - perkantiesiems subjektams. Skiriasi vertės ribos.</div>
           <div class="ex">Pvz.: UAB EPSO-G → VPĮ; LITGRID, Amber Grid, Energy cells → PĮ.</div>
         </div>
         <div class="gph-concept">
@@ -571,7 +571,7 @@ body.gph-noscroll{overflow:hidden}
         </div>
         <div class="gph-concept">
           <div class="term">BVPŽ / CPV5</div>
-          <div class="def">Bendrasis viešųjų pirkimų žodynas — pirkimo objekto kodas. CPV5 — pirmi 5 skaitmenys, naudojami panašiems pirkimams grupuoti.</div>
+          <div class="def">Bendrasis viešųjų pirkimų žodynas - pirkimo objekto kodas. CPV5 - pirmi 5 skaitmenys, naudojami panašiems pirkimams grupuoti.</div>
           <div class="ex">Pvz.: 30232130-4 → CPV5 „30232" (spausdintuvai).</div>
         </div>
         <div class="gph-concept">
@@ -581,7 +581,7 @@ body.gph-noscroll{overflow:hidden}
         </div>
         <div class="gph-concept">
           <div class="term">A ir B grafikas</div>
-          <div class="def">Terminų skaičiavimo režimai. A — tikslūs VPT terminai be rezervo; B — su +20 % buferiu deryboms ir nenumatytiems delsimams.</div>
+          <div class="def">Terminų skaičiavimo režimai. A - tikslūs VPT terminai be rezervo; B - su +20 % buferiu deryboms ir nenumatytiems delsimams.</div>
           <div class="ex">Pvz.: rizikingam pirkimui rinkitės B, kad liktų laiko atsakymams į klausimus.</div>
         </div>
         <div class="gph-concept">
@@ -595,11 +595,11 @@ body.gph-noscroll{overflow:hidden}
       <div class="gph-faq">
         <details>
           <summary>Kur saugomi mano duomenys?</summary>
-          <div class="ans">Tik Jūsų naršyklėje (localStorage). Į serverį niekas neperduodama, tarp seansų išsisaugo. Ištrynus naršyklės duomenis — viskas dingsta, todėl svarbius planus eksportuokite į Excel.</div>
+          <div class="ans">Tik Jūsų naršyklėje (localStorage). Į serverį niekas neperduodama, tarp seansų išsisaugo. Ištrynus naršyklės duomenis - viskas dingsta, todėl svarbius planus eksportuokite į Excel.</div>
         </details>
         <details>
           <summary>Iš kur imamos VPT vertės ribos?</summary>
-          <div class="ans">Ribos įrašytos modulyje ir galioja nuo 2026-01-01. VPT jas atnaujina (paprastai kas 2 metus) — tada reikia atnaujinti modulį.</div>
+          <div class="ans">Ribos įrašytos modulyje ir galioja nuo 2026-01-01. VPT jas atnaujina (paprastai kas 2 metus) - tada reikia atnaujinti modulį.</div>
         </details>
         <details>
           <summary>Kuo skiriasi A ir B grafikas?</summary>
@@ -607,7 +607,7 @@ body.gph-noscroll{overflow:hidden}
         </details>
         <details>
           <summary>Kaip modulis aptinka centralizavimo galimybes?</summary>
-          <div class="ans">Pirkimai grupuojami pagal CPV5, klasterizuojami pagal pavadinimo Jaccard panašumą ir vertinamas sutarčių datų derinimas. Rezultatas — kandidatų kortelės su galima sutaupyti suma.</div>
+          <div class="ans">Pirkimai grupuojami pagal CPV5, klasterizuojami pagal pavadinimo Jaccard panašumą ir vertinamas sutarčių datų derinimas. Rezultatas - kandidatų kortelės su galima sutaupyti suma.</div>
         </details>
         <details>
           <summary>Ar šis įrankis pakeičia Doclogix ar CVP IS?</summary>
@@ -620,7 +620,7 @@ body.gph-noscroll{overflow:hidden}
     </div>
   </div>
 </div>
-<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS — 2 lygis (pabaiga) ============ -->
+<!-- ============ G-PROCURE PAGALBOS KOMPONENTAS - 2 lygis (pabaiga) ============ -->
 
 <footer>
   EPSO-G grupės pirkimų planavimo įrankis · MVP v1.1 · Duomenys saugomi tik naršyklėje<br>
@@ -672,7 +672,7 @@ const HOLIDAYS = [
 function save(){ try{localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA))}catch(e){} }
 function load(){ try{const s=localStorage.getItem(STORAGE_KEY); if(s) DATA=JSON.parse(s);}catch(e){} }
 
-/* ==================== WORKDAY (v1.2 — LOCAL TIMEZONE FIXED) ==================== */
+/* ==================== WORKDAY (v1.2 - LOCAL TIMEZONE FIXED) ==================== */
 // Visi datos veiksmai naudoja vietos laiko zoną, ne UTC. Anksčiau toISOString() konvertuodavo
 // vietos vidurnaktį į UTC (-2/-3 val.), dėl ko data pasislinkdavo viena diena atgal.
 function _isoLocal(d){
@@ -744,7 +744,7 @@ function recommendMethod(value, type, law, isSpecial){
     reason = `Vertė ${fmtMoney(value)} mažesnė už mažos vertės ribą (${fmtMoney(mvThreshold)}).`;
   } else {
     category = "Mažos vertės"; recommended = "MV-NZ";
-    reason = `Maža vertė (${fmtMoney(value)}) — galima žodinė apklausa.`;
+    reason = `Maža vertė (${fmtMoney(value)}) - galima žodinė apklausa.`;
   }
   const rule20 = (value >= intlThreshold) ? {
     applies: true, threshold: isWorks ? 1000000 : 80000,
@@ -790,7 +790,7 @@ function validateProc(p){
   const company = COMPANIES[p.imone] || COMPANIES["EPSO-G"];
   const T = THRESHOLDS[company.law];
   if(p.verte >= (p.rusis === "Darbai" ? T.intl_works : T.intl_goods) && p.valdyba !== "Taip"){
-    issues.push({sev:"warn", msg:"Tarptautinė vertė — paprastai reikalingas Valdybos pritarimas"});
+    issues.push({sev:"warn", msg:"Tarptautinė vertė - paprastai reikalingas Valdybos pritarimas"});
   }
   return issues;
 }
@@ -842,7 +842,7 @@ function renderImportPrewarning(){
   }
   banner.innerHTML = `<div class="alert warn"><span class="alert-icon">⚠️</span><div class="alert-body">
     <div class="alert-title">Plane jau yra ${n} pirkimų</div>
-    Naujai importuojami duomenys bus <strong>pridedami</strong> prie esamų (ne pakeičiami). Jei norite pradėti nuo nulio — pirma išvalykite planą.
+    Naujai importuojami duomenys bus <strong>pridedami</strong> prie esamų (ne pakeičiami). Jei norite pradėti nuo nulio - pirma išvalykite planą.
     <div style="margin-top:8px">
       <button class="btn danger" onclick="clearAll()">🗑️ Išvalyti planą (${n}) prieš importą</button>
       <button class="btn ghost sm" onclick="goTab('register')">📋 Peržiūrėti esamus →</button>
@@ -994,14 +994,14 @@ function handleFile(f){
           if(matches > bestMatches){ bestMatches = matches; headerRowIdx = i; }
         }
         if(bestMatches < 2){
-          log.push(`  ⏭ "${sn}": antraštės nerasta (rasta ${bestMatches} žinomų laukų — gali būti instrukcijų/katalogų lapas)`);
+          log.push(`  ⏭ "${sn}": antraštės nerasta (rasta ${bestMatches} žinomų laukų - gali būti instrukcijų/katalogų lapas)`);
           return;
         }
 
         const headers = aoa[headerRowIdx].map(h => String(h||"").trim());
         const mappedHeaders = headers.map(h => ({raw:h, key:lookupField(h)}));
         const matchedCount = mappedHeaders.filter(m=>m.key).length;
-        log.push(`  ✓ "${sn}": antraštės eilutėje ${headerRowIdx+1} — atpažinta ${matchedCount}/${headers.filter(Boolean).length} laukų`);
+        log.push(`  ✓ "${sn}": antraštės eilutėje ${headerRowIdx+1} - atpažinta ${matchedCount}/${headers.filter(Boolean).length} laukų`);
 
         let sheetImported = 0, sheetSkipped = 0;
         for(let i = headerRowIdx + 1; i < aoa.length; i++){
@@ -1049,7 +1049,7 @@ function handleFile(f){
       const titleMsg = imported > 0 ? "Sėkmingai importuota" : "Nieko nepavyko importuoti";
       const detailMsg = imported > 0
         ? `Įkelta <strong>${imported}</strong> pirkimų. Praleista neužbaigtų: ${skipped}.`
-        : `Failo struktūra neatpažinta. Žiūrėkite žurnalą žemiau — galbūt nesutampa stulpelių pavadinimai arba antraščių nėra pirmose 15 eilučių.`;
+        : `Failo struktūra neatpažinta. Žiūrėkite žurnalą žemiau - galbūt nesutampa stulpelių pavadinimai arba antraščių nėra pirmose 15 eilučių.`;
       status.innerHTML = `<div class="alert ${cls}"><span class="alert-icon">${icon}</span>
         <div class="alert-body">
           <div class="alert-title">${titleMsg}</div>
@@ -1131,7 +1131,7 @@ function renderRegister(){
   wrap.innerHTML = html;
 }
 
-function fmtIfDate(v){ if(!v) return `<span class="muted">—</span>`; const d=parseDate(v); if(d) return fmtDate(d); return String(v).slice(0,10); }
+function fmtIfDate(v){ if(!v) return `<span class="muted">-</span>`; const d=parseDate(v); if(d) return fmtDate(d); return String(v).slice(0,10); }
 function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
 function addNewProc(){ openProcModal(null); }
@@ -1144,7 +1144,7 @@ function delProc(id){
 function clearAll(){
   const n = DATA.procurements.length;
   if(n === 0){
-    alert("Planas jau tuščias — nieko valyti nereikia.");
+    alert("Planas jau tuščias - nieko valyti nereikia.");
     return;
   }
   if(!confirm(`Pašalinti ${n} pirkimų iš plano? Šio veiksmo atšaukti negalima.`)) return;
@@ -1171,7 +1171,7 @@ function openProcModal(p){
   const isNew = !p;
   if(isNew) p = {id:"new_"+Date.now(), imone: document.getElementById("companyFilter").value !== "ALL" ? document.getElementById("companyFilter").value : "EPSO-G"};
   const m = document.getElementById("modalContent");
-  const methodOptions = Object.entries(METHODS).map(([k,v])=>`<option value="${v.full}" ${p.budas===v.full?"selected":""}>${k} — ${v.name}</option>`).join("");
+  const methodOptions = Object.entries(METHODS).map(([k,v])=>`<option value="${v.full}" ${p.budas===v.full?"selected":""}>${k} - ${v.name}</option>`).join("");
   m.innerHTML = `
     <h3>${isNew ? "Naujas pirkimas" : "Redaguoti pirkimą"}</h3>
     <div class="form-row">
@@ -1184,7 +1184,7 @@ function openProcModal(p){
     </div>
     <div class="form-row">
       <div><label>Vertė be PVM (€) *</label><input type="number" id="f_verte" value="${p.verte||0}"></div>
-      <div><label>Pirkimo būdas</label><select id="f_budas"><option value="">— pasirinkti —</option>${methodOptions}</select></div>
+      <div><label>Pirkimo būdas</label><select id="f_budas"><option value="">- pasirinkti -</option>${methodOptions}</select></div>
       <div><label>BVPŽ pagrindinis</label><input id="f_bvpz" value="${escapeHtml(p.bvpz||"")}" placeholder="pvz. 30232130-4"></div>
     </div>
     <div class="form-row">
@@ -1271,17 +1271,17 @@ function renderValidation(){
   const procs = getFilteredProcs();
   const totalAll = DATA.procurements.length;
   const filters = getActiveFilterDescription();
-  // v1.2: filtrų indikatorius — aktyvus filtras matomas, kad nevisada būtų klaidingai optimistinė išvada
+  // v1.2: filtrų indikatorius - aktyvus filtras matomas, kad nevisada būtų klaidingai optimistinė išvada
   const banner = document.getElementById("validationFilterBanner");
   if(filters.length > 0){
     banner.innerHTML = `<div class="alert warn" style="margin-bottom:12px"><span class="alert-icon">🔎</span><div class="alert-body">
-      <div class="alert-title">Validacija rodoma su aktyviu filtru — rezultatai gali būti nepilni</div>
+      <div class="alert-title">Validacija rodoma su aktyviu filtru - rezultatai gali būti nepilni</div>
       Rodoma <strong>${procs.length}</strong> iš <strong>${totalAll}</strong> visų plano pirkimų.<br>
       Aktyvūs filtrai: ${filters.map(f => `<span class="badge yellow" style="margin-right:4px">${escapeHtml(f.label)}: ${escapeHtml(f.value)}</span>`).join("")}
       <button class="btn ghost sm" style="margin-top:6px" onclick="clearAllFilters()">✕ Išvalyti visus filtrus</button>
     </div></div>`;
   } else if(totalAll > 0) {
-    banner.innerHTML = `<div class="alert info" style="margin-bottom:12px"><span class="alert-icon">✓</span><div class="alert-body">Validacija rodoma visam planui — <strong>${totalAll}</strong> pirkimų, jokie filtrai neaktyvūs.</div></div>`;
+    banner.innerHTML = `<div class="alert info" style="margin-bottom:12px"><span class="alert-icon">✓</span><div class="alert-body">Validacija rodoma visam planui - <strong>${totalAll}</strong> pirkimų, jokie filtrai neaktyvūs.</div></div>`;
   } else {
     banner.innerHTML = "";
   }
@@ -1327,7 +1327,7 @@ function runMethodTest(){
   document.getElementById("methodResult").innerHTML = `
     <div class="alert"><span class="alert-icon">⚖️</span>
       <div class="alert-body">
-        <div class="alert-title">Rekomenduojama: <span class="badge green">${r.recommended} — ${m?m.name:""}</span> · Kategorija: ${r.category}</div>
+        <div class="alert-title">Rekomenduojama: <span class="badge green">${r.recommended} - ${m?m.name:""}</span> · Kategorija: ${r.category}</div>
         <p style="margin:8px 0">${r.reason}</p>
         <div class="grid grid-3" style="margin-top:8px">
           <div class="kpi cool"><span class="kpi-label">Tarpt. riba</span><span class="kpi-value" style="font-size:18px">${fmtMoney(r.intlThreshold)}</span></div>
@@ -1338,7 +1338,7 @@ function runMethodTest(){
       </div></div>`;
 }
 
-/* ==================== 20% TAISYKLĖS PORTFELIO KONTROLĖ (v1.2 — nauja) ====================
+/* ==================== 20% TAISYKLĖS PORTFELIO KONTROLĖ (v1.2 - nauja) ====================
  * Grupuoja pirkimus pagal CPV5 + įmonė + objekto rūšis.
  * Kiekvienai grupei (potencialus „vienas pirkimas su dalimis"):
  *   - Bendra vertė
@@ -1417,7 +1417,7 @@ function run20PercentAnalysis(){
     splitRisk.forEach(r => {
       html += `<div class="alert error" style="margin-bottom:8px"><span class="alert-icon">🚩</span><div class="alert-body">
         <div class="alert-title">${r.imone} · CPV ${r.cpv5} · ${r.rusis} · ${r.items.length} pirkimai</div>
-        Visi pirkimai pažymėti kaip <strong>mažos vertės</strong> (kiekvienas &lt; ${fmtMoney(r.mvLimit)}), tačiau jų <strong>bendra vertė yra ${fmtMoney(r.totalValue)}</strong> — jau pasiekia ar viršija MV ribą. <strong>Tai požymis, kad pirkimas dirbtinai suskaidytas.</strong>
+        Visi pirkimai pažymėti kaip <strong>mažos vertės</strong> (kiekvienas &lt; ${fmtMoney(r.mvLimit)}), tačiau jų <strong>bendra vertė yra ${fmtMoney(r.totalValue)}</strong> - jau pasiekia ar viršija MV ribą. <strong>Tai požymis, kad pirkimas dirbtinai suskaidytas.</strong>
         <div class="muted" style="margin-top:6px">Pirkimai: ${r.items.map(p => escapeHtml(p.nr||"?")).join(", ")}</div>
         <div class="hint" style="margin-top:6px">💡 Apsvarstykite organizuoti kaip vieną supaprastintą ar tarptautinį pirkimą su dalimis pagal VPĮ/PĮ.</div>
       </div></div>`;
@@ -1481,7 +1481,7 @@ function populateDurationOptions(){
   if(sel.options.length>1) return;
   Object.entries(METHODS).forEach(([k,v])=>{
     const o=document.createElement("option");
-    o.value=k; o.textContent=`${k} — ${v.name} (${v.total} d.d.)`;
+    o.value=k; o.textContent=`${k} - ${v.name} (${v.total} d.d.)`;
     sel.appendChild(o);
   });
   const tbody=document.querySelector("#methodCatalog tbody");
@@ -1522,12 +1522,12 @@ function runDuration(){
 
 /* ==================== CENTRALIZATION (v1.2) ====================
  * Patobulinta grupavimo logika:
- *   1. CPV5 (5 skaitm.) vietoj CPV3 — užkerta kelią elektros linijoms ir
+ *   1. CPV5 (5 skaitm.) vietoj CPV3 - užkerta kelią elektros linijoms ir
  *      dujotiekiui patekti į tą pačią grupę (abu turi CPV3 "452" bet skirtus CPV5).
- *   2. Jaccard teksto panašumo testas pagal objekto pavadinimo žodžius —
+ *   2. Jaccard teksto panašumo testas pagal objekto pavadinimo žodžius -
  *      jei objektai pernelyg skirtingi (intersection / union < 0.15), jie
  *      atskiriami į skirtingus klasterius net su tuo pačiu CPV5.
- *   3. computeSynergy() — bendra formulė, naudojama ir ekrane, ir PDF.
+ *   3. computeSynergy() - bendra formulė, naudojama ir ekrane, ir PDF.
  */
 
 // Lietuviški stopžodžiai, kurie filtruojami iš pavadinimo tokenizacijos
@@ -1554,7 +1554,7 @@ function jaccard(setA, setB){
   return inter / (setA.size + setB.size - inter);
 }
 function cpvKey(bvpz){
-  // CPV5 — pirmi 5 skaitm. (pvz. "45231" elektros/dujų linijoms; "30232" spausdintuvams)
+  // CPV5 - pirmi 5 skaitm. (pvz. "45231" elektros/dujų linijoms; "30232" spausdintuvams)
   return String(bvpz||"").replace(/\D/g,"").slice(0,5);
 }
 
@@ -1617,7 +1617,7 @@ function buildCentralizationClusters(){
   return clusters;
 }
 
-// Bendra sinergijos skaičiavimo formulė — naudojama ir ekrane, ir PDF
+// Bendra sinergijos skaičiavimo formulė - naudojama ir ekrane, ir PDF
 function computeSynergy(group){
   const items = group.items;
   const companies = new Set(items.map(p => p.imone || "?"));
@@ -1678,13 +1678,13 @@ function runCentralAnalysis(){
           <tbody>${c.items.map(p=>`<tr><td><span class="badge gray">${p.imone||"?"}</span></td><td>${escapeHtml(p.nr||"")}</td><td>${escapeHtml((p.objektas||"").slice(0,60))}</td><td>${fmtMoney(p.verte||0)}</td><td style="font-family:monospace">${escapeHtml(String(p.bvpz||"").slice(0,14))}</td><td>${fmtIfDate(p.sutarciesData)}</td></tr>`).join("")}</tbody>
         </table>
       </details>
-      <div class="hint" style="margin-top:10px">💡 <strong>Rekomendacija:</strong> ${c.synergyPct>=20?"Stipri centralizavimo galimybė. Siūloma organizuoti centralizuotą EPSO-G grupės lygmens pirkimą.":c.synergyPct>=12?"Vidutinė centralizavimo galimybė. Apsvarstykite preliminarią sutartį arba CPO sprendimą.":"Maža sinergija — verta apjungti tik tuo atveju, jei pirkimai panašūs technikiškai."}</div>
+      <div class="hint" style="margin-top:10px">💡 <strong>Rekomendacija:</strong> ${c.synergyPct>=20?"Stipri centralizavimo galimybė. Siūloma organizuoti centralizuotą EPSO-G grupės lygmens pirkimą.":c.synergyPct>=12?"Vidutinė centralizavimo galimybė. Apsvarstykite preliminarią sutartį arba CPO sprendimą.":"Maža sinergija - verta apjungti tik tuo atveju, jei pirkimai panašūs technikiškai."}</div>
     </div>`;
   });
   document.getElementById("centralResult").innerHTML=html;
 }
 
-/* ==================== PAJĖGUMŲ KALENDORIUS (v1.2 — nauja) ====================
+/* ==================== PAJĖGUMŲ KALENDORIUS (v1.2 - nauja) ====================
  * Heatmap: eilutės = įmonės arba iniciatoriai, stulpeliai = mėnesiai (12 mėn nuo dabartinio),
  * langelio reikšmė = pirkimų sudėtingumo balų suma. Spalva intensyvėja kuo didesnė reikšmė.
  */
@@ -1820,7 +1820,7 @@ function renderCapacity(){
       <div class="alert-title">${overloadedCells.length} perkrautų laikotarpių aptikta</div>
       Šie mėnesiai viršija ${CAPACITY_PER_ROW} balų / vieno etato pajėgumą:
       <ul style="margin:6px 0 0 18px;padding:0">
-        ${overloadedCells.slice(0,10).map(o => `<li><strong>${escapeHtml(o.row)}</strong> · ${o.month} — <strong>${o.score} balų</strong> (${o.count} pirkimai)</li>`).join("")}
+        ${overloadedCells.slice(0,10).map(o => `<li><strong>${escapeHtml(o.row)}</strong> · ${o.month} - <strong>${o.score} balų</strong> (${o.count} pirkimai)</li>`).join("")}
       </ul>
       <div class="hint" style="margin-top:8px">💡 Apsvarstykite perkelti dalį pirkimų į gretimą mėnesį, sumažinti procedūros sudėtingumą (pvz. naudoti CPO, kur galima), arba sustiprinti komandą tame periode.</div>
     </div></div>`;
@@ -1829,7 +1829,7 @@ function renderCapacity(){
   wrap.innerHTML = html;
 }
 
-/* ==================== PERSPĖJIMŲ CENTRAS (v1.2 — nauja) ====================
+/* ==================== PERSPĖJIMŲ CENTRAS (v1.2 - nauja) ====================
  * Automatiškai aptinka:
  *   - Vėluojantis inicijavimas (inicijavimo data jau praėjo)
  *   - Procedūros neatitikimas (jau yra validacijoje, čia agreguojama)
@@ -1863,7 +1863,7 @@ function computeWarnings(){
     }
   });
 
-  // 3. Galimas skaidymas — CPV5 + įmonė + rūšis grupė kur visi yra MV bet suma > MV ribos
+  // 3. Galimas skaidymas - CPV5 + įmonė + rūšis grupė kur visi yra MV bet suma > MV ribos
   const splitGroups = {};
   procs.forEach(p => {
     const cpv = cpvKey(p.bvpz);
@@ -1883,15 +1883,15 @@ function computeWarnings(){
     }
   });
 
-  // 4. Dublikatai — panašus objektas + ta pati įmonė (KLASTERIZAVIMAS, ne poros)
+  // 4. Dublikatai - panašus objektas + ta pati įmonė (KLASTERIZAVIMAS, ne poros)
   // v1.2.1: ankstesnė versija skaičiavo porų skaičių (N pirkimų → N×(N-1)/2 porų).
   // Dabar grupuojami panašūs pirkimai į klasterius (Union-Find), kiekviena 2+ narių grupė = 1 dublikatas.
-  // Slenkstis pakeltas iki 0.7 (anksčiau 0.5) — patikimesnis aptikimas.
+  // Slenkstis pakeltas iki 0.7 (anksčiau 0.5) - patikimesnis aptikimas.
   const DUP_THRESHOLD = 0.7;
   const MIN_TOKENS = 2;
   // Pirma pre-skaičiuojame tokenus kartą
   const items = procs.map(p => ({p, tokens: new Set(normTokens(p.objektas))}));
-  // Grupavimas pagal įmonę — dublikatai galimi tik toje pačioje įmonėje
+  // Grupavimas pagal įmonę - dublikatai galimi tik toje pačioje įmonėje
   const byCompany = {};
   items.forEach((it, idx) => {
     if(it.tokens.size < MIN_TOKENS) return; // praleidžiame per trumpus pavadinimus
@@ -1985,7 +1985,7 @@ function renderWarningCenter(){
     w.split.slice(0,5).forEach(g => {
       html += `<div class="alert error" style="margin-bottom:6px"><span class="alert-icon">🚩</span><div class="alert-body">
         <strong>${g.imone}</strong> · CPV ${g.cpv5} · ${g.rusis} · ${g.items.length} pirkimai<br>
-        Visi MV (&lt;${fmtMoney(g.mvLimit)}), bet suma <strong>${fmtMoney(g.totalValue)}</strong> jau viršija MV ribą — galimas dirbtinis skaidymas.
+        Visi MV (&lt;${fmtMoney(g.mvLimit)}), bet suma <strong>${fmtMoney(g.totalValue)}</strong> jau viršija MV ribą - galimas dirbtinis skaidymas.
         <div class="muted">Pirkimai: ${g.items.map(p=>escapeHtml(p.nr||"?")).join(", ")}</div>
         <button class="btn ghost sm" onclick="goTab('method');setTimeout(run20PercentAnalysis,300)">📊 Detali analizė</button>
       </div></div>`;
@@ -1996,7 +1996,7 @@ function renderWarningCenter(){
     // v1.2.1: dabar dublikatai = klasterių grupės, ne poros. Sumuojame perteklinius narius.
     const extraItems = w.duplicates.reduce((s,g) => s + (g.count - 1), 0);
     html += `<h4 style="color:#a35c00;margin-top:14px">📋 Galimi dublikatai (${w.duplicates.length} grupės · ${extraItems} pertekliniai pirkimai)</h4>`;
-    // Rūšiuojame pagal grupės dydį (didžiausios — pirmiausia)
+    // Rūšiuojame pagal grupės dydį (didžiausios - pirmiausia)
     const sortedDups = [...w.duplicates].sort((a,b) => b.count - a.count);
     sortedDups.slice(0,10).forEach(({company, items, count}) => {
       const firstObj = items[0].objektas || "?";
@@ -2092,16 +2092,16 @@ function exportExcel(){
   XLSX.writeFile(wb, `EPSO-G_MPP_${fmtDate(new Date())}.xlsx`);
 }
 
-// PDF lietuviškų raidžių transliteravimas — jsPDF Helvetica nepalaiko ą,č,ę,ė,į,š,ų,ū,ž.
+// PDF lietuviškų raidžių transliteravimas - jsPDF Helvetica nepalaiko ą,č,ę,ė,į,š,ų,ū,ž.
 // v1.2: visi PDF tekstai eina per šią funkciją, kad transliteravimas būtų nuoseklus.
 const TRANSLIT_MAP = {
   "ą":"a","č":"c","ę":"e","ė":"e","į":"i","š":"s","ų":"u","ū":"u","ž":"z",
   "Ą":"A","Č":"C","Ę":"E","Ė":"E","Į":"I","Š":"S","Ų":"U","Ū":"U","Ž":"Z",
-  "„":"\"","”":"\"","“":"\"","–":"-","—":"-","…":"..."," ":" "
+  "„":"\"","”":"\"","“":"\"","–":"-","-":"-","…":"..."," ":" "
 };
 function pdfText(s){
   if(s == null) return "";
-  return String(s).replace(/[ąčęėįšųūžĄČĘĖĮŠŲŪŽ„”“–—… ]/g, ch => TRANSLIT_MAP[ch] || ch);
+  return String(s).replace(/[ąčęėįšųūžĄČĘĖĮŠŲŪŽ„”“–-… ]/g, ch => TRANSLIT_MAP[ch] || ch);
 }
 
 function exportPdf(){
@@ -2188,9 +2188,9 @@ function loadDemo(){
 });
 document.getElementById("modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
 
-/* ==================== G-PROCURE PAGALBOS KOMPONENTAS — elgsena (portabilu) ====================
-   Savarankiškas IIFE: nekeičia jokių globalių kintamųjų. Perkeliant į kitą modulį — kopijuokite
-   šį bloką kartu su CSS ir HTML dalimis. Norint atskiros sutraukimo būsenos — keiskite STORE_KEY. */
+/* ==================== G-PROCURE PAGALBOS KOMPONENTAS - elgsena (portabilu) ====================
+   Savarankiškas IIFE: nekeičia jokių globalių kintamųjų. Perkeliant į kitą modulį - kopijuokite
+   šį bloką kartu su CSS ir HTML dalimis. Norint atskiros sutraukimo būsenos - keiskite STORE_KEY. */
 (function(){
   var STORE_KEY = "gprocure_help_collapsed";
   var intro   = document.getElementById("gphIntro");
@@ -2262,7 +2262,7 @@ document.getElementById("modal").addEventListener("click", e=>{ if(e.target.id==
     });
   }
 })();
-/* ==================== G-PROCURE PAGALBOS KOMPONENTAS — elgsena (pabaiga) ==================== */
+/* ==================== G-PROCURE PAGALBOS KOMPONENTAS - elgsena (pabaiga) ==================== */
 
 /* ==================== INIT ==================== */
 load();
